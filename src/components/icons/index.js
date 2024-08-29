@@ -1,0 +1,14 @@
+export {default as PhoneIcon} from './phone_icon.vue';
+export {default as PhoneCaptchaIcon} from './phone_captcha_icon.vue';
+export {default as EmailIcon} from './phone_icon.vue';
+export {default as EmailCaptchaIcon} from './phone_captcha_icon.vue';
+export {default as AccountIcon} from './account_icon.vue';
+export {default as PasswordIcon} from './password_icon.vue';
+export {default as ImageCaptchaIcon} from './image_captcha_icon.vue';
+export {default as AccountPasswordLoginIcon} from './account_password_login.vue';
+export {default as CaptchaLoginIcon} from './captcha_login.vue';
+export {default as ForgetPasswordIcon} from './forget_password.vue';
+export {default as RegisterAccountIcon} from './register_account.vue';
+export {default as EmailLoginIcon} from './email_login_icon.vue';
+export {default as PhoneLoginIcon} from './phone_login_icon.vue';
+export {default as Datetime} from './datetime.vue';
