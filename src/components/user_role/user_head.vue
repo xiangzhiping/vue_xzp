@@ -2,15 +2,14 @@
   <el-form>
     <div class="user_head">
       <div class="date_picker_form1">
-        <div class="date_picker_query">
+        <div class="input_query">
           <el-form-item>
             <div class="form_head">
               <el-icon color="#707070" size="20">
-                <Clock/>
+                <User/>
               </el-icon>
             </div>
-            <el-date-picker v-model="userQueryForm.login_datetime" type="datetimerange"
-                            start-placeholder="登录开始日期时间" end-placeholder="登录结束日期时间" class="zcsdsda"/>
+            <el-input v-model="userRoleQueryForm.role_name" placeholder="角色名称（支持开头关键字匹配）" clearable/>
           </el-form-item>
         </div>
         <div class="date_picker_query">
@@ -20,36 +19,22 @@
                 <Clock/>
               </el-icon>
             </div>
-            <el-date-picker v-model="userQueryForm.logout_datetime" type="datetimerange" range-separator="-"
-                            start-placeholder="登出开始日期时间" end-placeholder="登出结束日期时间"/>
-          </el-form-item>
-        </div>
-      </div>
-      <div class="date_picker_form1">
-        <div class="date_picker_query">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Clock/>
-              </el-icon>
-            </div>
-            <el-date-picker v-model="userQueryForm.create_datetime" type="datetimerange" range-separator="-"
+            <el-date-picker v-model="userRoleQueryForm.create_datetime" type="datetimerange" range-separator="-"
                             start-placeholder="创建开始日期时间" end-placeholder="创建结束日期时间" class=""/>
-          </el-form-item>
-        </div>
-        <div class="date_picker_query">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Clock/>
-              </el-icon>
-            </div>
-            <el-date-picker v-model="userQueryForm.update_datetime" type="datetimerange" range-separator="-"
-                            start-placeholder="更新开始日期时间" end-placeholder="更新结束日期时间"/>
           </el-form-item>
         </div>
       </div>
       <div class="date_picker_input_form">
+        <div class="input_query">
+          <el-form-item>
+            <div class="form_head">
+              <el-icon color="#707070" size="20">
+                <Coordinate/>
+              </el-icon>
+            </div>
+            <el-input v-model="userRoleQueryForm.operator_id" placeholder="操作者用户唯一ID" clearable/>
+          </el-form-item>
+        </div>
         <div class="date_picker_query">
           <el-form-item>
             <div class="form_head">
@@ -57,42 +42,23 @@
                 <Clock/>
               </el-icon>
             </div>
-            <el-date-picker v-model="userQueryForm.delete_datetime" type="datetimerange" range-separator="-"
-                            start-placeholder="删除开始日期时间" end-placeholder="删除结束日期时间" class=""/>
+            <el-date-picker v-model="userRoleQueryForm.update_datetime" type="datetimerange" range-separator="-"
+                            start-placeholder="更新开始日期时间" end-placeholder="更新结束日期时间"/>
           </el-form-item>
         </div>
-        <div class="input_query">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Phone/>
-              </el-icon>
-            </div>
-            <el-input v-model="userQueryForm.phone" placeholder="手机号码（支持手机号起始位关键字匹配）" clearable/>
-          </el-form-item>
-        </div>
+
       </div>
       <div class="input_select_form">
-        <div class="input_query">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Message/>
-              </el-icon>
-            </div>
-            <el-input v-model="userQueryForm.email" placeholder="邮箱地址（支持邮箱号起始位关键字匹配）" clearable/>
-          </el-form-item>
-        </div>
         <div class="select_query">
           <el-form-item>
             <div class="form_head">
               <el-icon color="#707070" size="20">
-                <SwitchButton/>
+                <CaretTop/>
               </el-icon>
             </div>
-            <el-select v-model="userQueryForm.login_status" placeholder="登录状态">
+            <el-select v-model="userRoleQueryForm.role_level" placeholder="角色级别">
               <el-option
-                  v-for="item in loginStatusOptions"
+                  v-for="item in roleOptions.role_levels"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -105,14 +71,25 @@
                 <Open/>
               </el-icon>
             </div>
-            <el-select v-model="userQueryForm.account_status" placeholder="账号状态">
+            <el-select v-model="userRoleQueryForm.role_status" placeholder="角色状态">
               <el-option
-                  v-for="item in accountStatusOptions"
+                  v-for="item in roleOptions.role_states"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
               />
             </el-select>
+          </el-form-item>
+        </div>
+        <div class="date_picker_query">
+          <el-form-item>
+            <div class="form_head">
+              <el-icon color="#707070" size="20">
+                <Clock/>
+              </el-icon>
+            </div>
+            <el-date-picker v-model="userRoleQueryForm.delete_datetime" type="datetimerange" range-separator="-"
+                            start-placeholder="删除开始日期时间" end-placeholder="删除结束日期时间" class=""/>
           </el-form-item>
         </div>
       </div>
@@ -120,48 +97,57 @@
         <div class="pagination_query">
           <el-form-item>
             <el-pagination
-                v-model:page-size="userQueryForm.number_pieces"
+                v-model:page-size="userRoleQueryForm.number_pieces"
                 :page-sizes="[500, 750, 1000]"
                 size="default"
                 :disabled="false"
                 :background="true"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="userRes.total"
+                :total="result.total"
                 @size-change="numberPiecesChangeHandel"
                 @current-change="numberPagesChangeHandel"
             />
           </el-form-item>
         </div>
-        <div class="select_button_query" style="display: flex; margin-top: 7px">
+        <div class="button_query">
           <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <User/>
-              </el-icon>
-            </div>
-            <el-select v-model="userQueryForm.user_status" placeholder="用户状态">
-              <el-option
-                  v-for="item in userStatusOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item style="margin-left: 10px">
-            <el-button plain type="info" @click="userQueryFormRefreshHandel">
+            <el-button plain type="info" @click="userRoleQueryFormRefreshHandel" title="重置查询条件">
               <el-icon size="20">
                 <Refresh/>
               </el-icon>
               <span>重 置</span>
             </el-button>
           </el-form-item>
-          <el-form-item style="margin-left: 10px">
-            <el-button plain type="primary" @click="userQueryHandel">
+          <el-form-item class="button_item">
+            <el-button plain type="primary" @click="userRoleQueryHandel">
               <el-icon size="20">
                 <Search/>
               </el-icon>
               <span>查 询</span>
+            </el-button>
+          </el-form-item>
+          <el-form-item class="button_item">
+            <el-button plain type="success" @click="userRoleQueryHandel">
+              <el-icon size="20">
+                <Plus/>
+              </el-icon>
+              <span>新 增</span>
+            </el-button>
+          </el-form-item>
+          <el-form-item class="button_item">
+            <el-button plain type="warning" @click="userRoleQueryHandel">
+              <el-icon size="20">
+                <EditPen/>
+              </el-icon>
+              <span>修 改</span>
+            </el-button>
+          </el-form-item>
+          <el-form-item class="button_item">
+            <el-button plain type="danger" @click="userRoleQueryHandel">
+              <el-icon size="20">
+                <Delete/>
+              </el-icon>
+              <span>删 除</span>
             </el-button>
           </el-form-item>
         </div>
@@ -172,100 +158,70 @@
 
 <script setup>
 import {reactive, ref} from 'vue'
-import {Refresh, Open, User, SwitchButton, Phone, Message, Search, Clock} from "@element-plus/icons-vue";
-import {userQuery} from '@/apis/user.js';
+import {
+  Refresh,
+  Open,
+  User,
+  Search,
+  Clock,
+  Coordinate, Plus, EditPen, Delete, CaretTop
+} from "@element-plus/icons-vue";
+import {userRoleQuery, userRoleMenuQuery} from '@/apis/user_role.js';
 import eventBus from '@/utils/event_bus.js';
 
-const userQueryForm = reactive({
-  phone: null,
-  email: null,
-  login_status: null,
-  account_status: null,
-  user_status: null,
-  login_datetime: null,
-  logout_datetime: null,
+const userRoleQueryForm = reactive({
+  role_name: null,
+  role_level: null,
+  operator_id: null,
+  role_status: null,
   create_datetime: null,
   update_datetime: null,
   delete_datetime: null,
   number_pages: 1,
-  number_pieces: 500,
+  number_pieces: 250,
 })
+const roleOptions = reactive({role_levels: [], role_states: []})
 
-const userRes = ref({total: 0, users: []});
-
-
-const userQueryHandel = async () => {
-  const res = await userQuery(userQueryForm)
-  userRes.value.total = res.data.total;
-  eventBus.emit('users', res);
+const userRoleMenuQueryHandel = async () => {
+  const res = await userRoleMenuQuery()
+  if (res.code === 200) {
+    roleOptions.role_levels = res.data.role_levels;
+    roleOptions.role_states = res.data.role_states;
+  }
 }
 
-userQueryHandel()
-const userQueryFormRefreshHandel = async () => {
-  userQueryForm.phone = null;
-  userQueryForm.email = null;
-  userQueryForm.login_status = null;
-  userQueryForm.account_status = null;
-  userQueryForm.user_status = null;
-  userQueryForm.login_datetime = null;
-  userQueryForm.logout_datetime = null;
-  userQueryForm.create_datetime = null;
-  userQueryForm.update_datetime = null;
-  userQueryForm.delete_datetime = null;
-  userQueryForm.number_pages = 1;
-  userQueryForm.number_pieces = 500;
+const result = ref({total: 0, roles: []});
+
+
+const userRoleQueryHandel = async () => {
+  await userRoleMenuQueryHandel()
+  const res = await userRoleQuery(userRoleQueryForm)
+  if (res.code === 200 || res.code === 204) {
+    result.value.total = res.data.total;
+    eventBus.emit('roles', res);
+  }
+}
+
+userRoleQueryHandel()
+const userRoleQueryFormRefreshHandel = async () => {
+  userRoleQueryForm.role_name = null;
+  userRoleQueryForm.role_level = null;
+  userRoleQueryForm.operator_id = null;
+  userRoleQueryForm.role_status = null;
+  userRoleQueryForm.create_datetime = null;
+  userRoleQueryForm.update_datetime = null;
+  userRoleQueryForm.delete_datetime = null;
+  userRoleQueryForm.number_pages = 1;
+  userRoleQueryForm.number_pieces = 250;
 }
 
 const numberPagesChangeHandel = (val) => {
-  userQueryForm.number_pages = val;
+  userRoleQueryForm.number_pages = val;
 };
 
 const numberPiecesChangeHandel = (val) => {
-  userQueryForm.number_pieces = val;
+  userRoleQueryForm.number_pieces = val;
 };
-
-const loginStatusOptions = reactive([
-  {
-    value: null,
-    label: '全部',
-  },
-  {
-    value: true,
-    label: '在线',
-  },
-  {
-    value: false,
-    label: '离线',
-  }
-])
-const accountStatusOptions = reactive([
-  {
-    value: null,
-    label: '全部',
-  },
-  {
-    value: true,
-    label: '启用',
-  },
-  {
-    value: false,
-    label: '禁用',
-  }
-])
-const userStatusOptions = reactive([
-  {
-    value: null,
-    label: '全部',
-  },
-  {
-    value: true,
-    label: '有效',
-  },
-  {
-    value: false,
-    label: '无效',
-  }
-])
 </script>
 
 <style scoped>
@@ -277,7 +233,7 @@ const userStatusOptions = reactive([
   flex-wrap: wrap;
 }
 
-.select_button_query span {
+.button_query span {
   font-size: 18px;
 }
 
@@ -314,7 +270,6 @@ const userStatusOptions = reactive([
 }
 
 .select_query {
-  margin-top: 5px;
   width: 310px;
   display: flex;
   justify-content: space-between;
@@ -332,6 +287,52 @@ const userStatusOptions = reactive([
 
 :deep(.el-pagination) {
   height: 30px;
+}
+
+:deep(.el-pagination>.is-first) {
+  height: 30px;
+  padding-right: 5px;
+  padding-left: 5px;
+  margin-top: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px 0 0 4px;
+  border: 1px solid var(--el-border-color);
+}
+
+:deep(.el-pagination__goto) {
+  height: 30px;
+  padding-right: 5px;
+  padding-left: 5px;
+  border: 1px solid var(--el-border-color);
+  border-radius: 4px 0 0 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:deep(.el-pagination__classifier) {
+  height: 30px;
+  padding-right: 5px;
+  padding-left: 5px;
+  border: 1px solid var(--el-border-color);
+  border-radius: 0 4px 4px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:deep(.el-pagination__editor>.is-in-pagination) {
+  border-radius: 0 4px 4px 0;
+}
+
+:deep(.el-input ) {
+  border: none;
+}
+
+:deep( .el-select--default) {
+  border-radius: 4px;
 }
 
 :deep(.el-range-separator) {
@@ -360,11 +361,11 @@ const userStatusOptions = reactive([
 }
 
 
-::v-deep .el-input__wrapper {
+:deep(.el-input__wrapper ) {
   border-radius: 0 4px 4px 0;
 }
 
-::v-deep .el-select__wrapper, ::v-deep .el-input {
+:deep(.el-select__wrapper, .el-input) {
   border-radius: 0 4px 4px 0;
 }
 
@@ -383,5 +384,17 @@ const userStatusOptions = reactive([
   align-items: center;
 }
 
+.button_query {
+  height: 32px;
+  border-radius: 4px;
+  margin-top: 7px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.button_item {
+  margin-left: 10px;
+}
 
 </style>

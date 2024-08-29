@@ -1,40 +1,28 @@
 <template>
-  <div class="user_body_box" ref="userBodyRef">
-    <el-table :data="userQueryRes.users"  stripe
+  <div class="user_role_body_box" ref="userRoleBodyRef">
+    <el-table :data="userRoleQueryRes.roles" stripe border
               :height="tableHeight"
               :header-cell-style="{background: '#e5eaf1', color: '#8a8b8d'}">
-      <el-table-column prop="user_id" label="用户ID" width="185" align="center"></el-table-column>
-      <el-table-column prop="nickname" label="昵称" width="200" align="center"></el-table-column>
-      <el-table-column prop="phone" label="电话号码" width="125" align="center"></el-table-column>
-      <el-table-column prop="email" label="邮箱地址" width="250" align="center"></el-table-column>
-      <el-table-column prop="avatar_key" label="头像Key" width="400" show-overflow-tooltip
-                       align="center"></el-table-column>
-      <el-table-column prop="login_status" label="登录状态" width="115" align="center">
-        <template #default="{ row }">
-          <el-icon :size="18" :color="row.login_status === true ? '#67C23A' : '#F56C6C'">
-            <SwitchButton/>
-          </el-icon>
+      <el-table-column prop="role_id" label="角色ID" width="100" align="center"></el-table-column>
+      <el-table-column prop="role_name" label="角色名称" width="400" align="center"></el-table-column>
+      <el-table-column prop="role_level" label="角色级别" width="300" align="center">
+        <template #default="scope">
+          <el-tag effect="plain" :type="getRoleInfo(scope.row.role_level).color">
+            {{ getRoleInfo(scope.row.role_level).text }}
+          </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="account_status" label="账号状态" width="120" align="center">
+      <el-table-column prop="paths" label="接口ID列表" width="300" align="center"></el-table-column>
+      <el-table-column prop="role_status" label="角色状态" width="120" align="center">
         <template #default="scope">
           <el-switch size="small"
-                     v-model="scope.row.account_status"
-                     @change="updateAccountStatusHandle(scope.row)"
+                     v-model="scope.row.role_status"
+                     @change="updateUserRoleStatusHandle(scope.row)"
                      style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
           ></el-switch>
         </template>
       </el-table-column>
-      <el-table-column prop="user_status" label="用户状态" width="115" align="center">
-        <template #default="{ row }">
-          <el-icon :size="18" :color="row.user_status === true ? '#67C23A' : '#F56C6C'">
-            <User/>
-          </el-icon>
-        </template>
-      </el-table-column>
-      <el-table-column prop="operator" label="操作者ID" width="185" align="center"></el-table-column>
-      <el-table-column prop="login_datetime" label="登录日期时间" width="160" align="center"></el-table-column>
-      <el-table-column prop="logout_datetime" label="登出日期时间" width="160" align="center"></el-table-column>
+      <el-table-column prop="operator_id" label="操作者唯一ID" width="185" align="center"></el-table-column>
       <el-table-column prop="create_datetime" label="创建日期时间" width="160" align="center"></el-table-column>
       <el-table-column prop="update_datetime" label="更新日期时间" width="160" align="center"></el-table-column>
       <el-table-column prop="delete_datetime" label="删除日期时间" width="160" align="center"></el-table-column>
@@ -43,52 +31,59 @@
 </template>
 
 <script setup>
-import { User, SwitchButton } from '@element-plus/icons-vue';
 import eventBus from '@/utils/event_bus.js';
-import { ref, onMounted, computed, watchEffect } from 'vue';
-import { userAccountStatusUpdate } from '@/apis/user.js';
+import {ref, computed, watchEffect} from 'vue';
+import {userRoleStatusUpdate} from '@/apis/user_role.js';
 
-const userQueryRes = ref({ total: 0, users: [] });
+const userRoleQueryRes = ref({total: 0, roles: []});
 
-const userBodyRef = ref(null);
+const userRoleBodyRef = ref(null);
 const tableHeight = computed(() => {
-  return userBodyRef.value ? userBodyRef.value.clientHeight - 2 : 'auto';
+  return userRoleBodyRef.value ? userRoleBodyRef.value.clientHeight - 2 : 'auto';
 });
 
 const adjustTableHeight = () => {
-  if (userBodyRef.value) {
-    userBodyRef.value.style.height = `${userBodyRef.value.offsetHeight - 2}px`;
+  if (userRoleBodyRef.value) {
+    userRoleBodyRef.value.style.height = `${userRoleBodyRef.value.offsetHeight - 2}px`;
   }
 };
 
-const userQueryResHandel = () => {
+const getRoleInfo = computed(() => (level) => {
+  let color, text;
+  if (level === 1) {
+    color = 'success';
+    text = '超级管理员';
+  } else if (level === 0) {
+    color = 'danger';
+    text = '普通用户';
+  } else {
+    color = 'warning';
+    text = '专业管理员';
+  }
+  return {color, text};
+});
+
+const userRoleQueryResHandel = () => {
   const handler = (msg) => {
-    userQueryRes.value = msg.data;
-    console.log(userQueryRes.value)
+    userRoleQueryRes.value = msg.data
   };
-  eventBus.on('users', handler);
+  eventBus.on('roles', handler);
 };
 
-userQueryResHandel();
-
-// 在组件挂载后调用 adjustTableHeight
-onMounted(() => {
-  adjustTableHeight();
-});
-
-// 监听元素大小变化时调用 adjustTableHeight
+userRoleQueryResHandel();
+adjustTableHeight();
 watchEffect(() => {
-  adjustTableHeight();
-});
+  adjustTableHeight()
+})
 
-const updateAccountStatusHandle = async (row) => {
-  await userAccountStatusUpdate({ user_id: row.user_id, type: row.account_status });
+const updateUserRoleStatusHandle = async (row) => {
+  await userRoleStatusUpdate({role_id: row.role_id, type: row.role_status});
 };
 </script>
 
 
 <style scoped>
-.user_body_box {
+.user_role_body_box {
   width: 100%;
   margin-top: 5px;
   display: flex;

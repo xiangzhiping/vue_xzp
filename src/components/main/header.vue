@@ -49,7 +49,6 @@ const navigateToPersonalHandel = async () => {
 .personal_avatar{
   width: 52px;
   height: 50px;
-  margin-right: 20px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -121,7 +121,7 @@
           <el-form-item>
             <el-pagination
                 v-model:page-size="userQueryForm.number_pieces"
-                :page-sizes="[500, 750, 1000]"
+                :page-sizes="[250, 500, 1000]"
                 size="default"
                 :disabled="false"
                 :background="true"
@@ -132,7 +132,7 @@
             />
           </el-form-item>
         </div>
-        <div class="select_button_query" style="display: flex; margin-top: 7px">
+        <div class="button_query" style="display: flex; margin-top: 7px">
           <el-form-item>
             <div class="form_head">
               <el-icon color="#707070" size="20">
@@ -277,7 +277,7 @@ const userStatusOptions = reactive([
   flex-wrap: wrap;
 }
 
-.select_button_query span {
+.button_query span {
   font-size: 18px;
 }
 
