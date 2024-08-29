@@ -11,7 +11,6 @@
     <div class="login_container_footer">
       <div
           v-for="(tab, index) in tabs"
-          :key="index"
           class="login_container_tab"
           :class="{ active: index === currentIndex }"
       >
