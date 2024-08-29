@@ -1,6 +1,8 @@
 <template>
   <div class="login_container">
-    <div class="login_container_header"><div class="linear_gradient">XIANGZHIPING</div></div>
+    <div class="login_container_header">
+      <div class="linear_gradient">XIANGZHIPING</div>
+    </div>
     <div class="login_container_pane">
       <transition :name="transitionName">
         <keep-alive>
@@ -9,12 +11,8 @@
       </transition>
     </div>
     <div class="login_container_footer">
-      <div
-          v-for="(tab, index) in tabs"
-          class="login_container_tab"
-          :class="{ active: index === currentIndex }"
-      >
-        <el-tooltip :content="tab.name"  effect="light">
+      <div v-for="(tab, index) in tabs" class="login_container_tab" :class="{ active: index === currentIndex }">
+        <el-tooltip :content="tab.name" effect="light">
           <div class="login_container_icon" @click="changeTab(index)">
             <el-icon :size="22">
               <component :is="tab.icon" class="route_icon"/>
