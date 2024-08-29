@@ -5,9 +5,9 @@
               :header-cell-style="{background: '#e5eaf1', color: '#8a8b8d'}">
       <el-table-column prop="role_id" label="角色ID" width="100" align="center"></el-table-column>
       <el-table-column prop="role_name" label="角色名称" width="400" align="center"></el-table-column>
-      <el-table-column prop="role_level" label="角色级别" width="300" align="center">
+      <el-table-column prop="role_level" label="角色级别" width="270" align="center">
         <template #default="scope">
-          <el-tag effect="plain" :type="getRoleInfo(scope.row.role_level).color">
+          <el-tag effect="light" :type="getRoleInfo(scope.row.role_level).color">
             {{ getRoleInfo(scope.row.role_level).text }}
           </el-tag>
         </template>
@@ -22,7 +22,7 @@
           ></el-switch>
         </template>
       </el-table-column>
-      <el-table-column prop="operator_id" label="操作者唯一ID" width="185" align="center"></el-table-column>
+      <el-table-column prop="operator_id" label="操作者ID" width="185" align="center"></el-table-column>
       <el-table-column prop="create_datetime" label="创建日期时间" width="160" align="center"></el-table-column>
       <el-table-column prop="update_datetime" label="更新日期时间" width="160" align="center"></el-table-column>
       <el-table-column prop="delete_datetime" label="删除日期时间" width="160" align="center"></el-table-column>

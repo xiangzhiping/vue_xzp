@@ -9,7 +9,7 @@
                 <User/>
               </el-icon>
             </div>
-            <el-input v-model="userRoleQueryForm.role_name" placeholder="角色名称（支持开头关键字匹配）" clearable/>
+            <el-input v-model="userRoleQueryForm.role_name" placeholder="角色名称（支持起始关键字匹配）" clearable/>
           </el-form-item>
         </div>
         <div class="date_picker_query">
@@ -32,7 +32,7 @@
                 <Coordinate/>
               </el-icon>
             </div>
-            <el-input v-model="userRoleQueryForm.operator_id" placeholder="操作者用户唯一ID" clearable/>
+            <el-input v-model="userRoleQueryForm.operator_id" placeholder="操作者ID" clearable/>
           </el-form-item>
         </div>
         <div class="date_picker_query">
@@ -192,9 +192,21 @@ const userRoleMenuQueryHandel = async () => {
 
 const result = ref({total: 0, roles: []});
 
+const formatDateTimeRange = (datetimeArr) => {
+  if (datetimeArr) {
+    const formattedDates = datetimeArr.map(date => {
+      return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
+    });
+    return formattedDates.join(', ');
+  }
+}
 
 const userRoleQueryHandel = async () => {
   await userRoleMenuQueryHandel()
+  userRoleQueryForm.create_datetime = formatDateTimeRange(userRoleQueryForm.create_datetime);
+  userRoleQueryForm.update_datetime = formatDateTimeRange(userRoleQueryForm.update_datetime);
+  userRoleQueryForm.delete_datetime = formatDateTimeRange(userRoleQueryForm.delete_datetime);
+  console.log(userRoleQueryForm)
   const res = await userRoleQuery(userRoleQueryForm)
   if (res.code === 200 || res.code === 204) {
     result.value.total = res.data.total;
@@ -285,7 +297,7 @@ const numberPiecesChangeHandel = (val) => {
   justify-content: left;
 }
 
-.pagination_query{
+.pagination_query {
   height: 31px;
 }
 
