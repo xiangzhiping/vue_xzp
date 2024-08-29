@@ -285,15 +285,19 @@ const numberPiecesChangeHandel = (val) => {
   justify-content: left;
 }
 
+.pagination_query{
+  height: 31px;
+}
+
 :deep(.el-pagination) {
-  height: 30px;
+  --el-pagination-button-height: 30px;
+  margin-top: -1px;
 }
 
 :deep(.el-pagination>.is-first) {
   height: 30px;
   padding-right: 5px;
   padding-left: 5px;
-  margin-top: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -310,6 +314,7 @@ const numberPiecesChangeHandel = (val) => {
   display: flex;
   justify-content: center;
   align-items: center;
+
 }
 
 :deep(.el-pagination__classifier) {
@@ -321,6 +326,7 @@ const numberPiecesChangeHandel = (val) => {
   display: flex;
   justify-content: center;
   align-items: center;
+
 }
 
 :deep(.el-pagination__editor>.is-in-pagination) {
@@ -387,7 +393,7 @@ const numberPiecesChangeHandel = (val) => {
 .button_query {
   height: 32px;
   border-radius: 4px;
-  margin-top: 7px;
+  margin-top: 6px;
   display: flex;
   justify-content: left;
   align-items: center;
