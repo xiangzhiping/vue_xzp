@@ -127,10 +127,11 @@
             </el-button>
           </el-form-item>
           <el-form-item class="button_item">
-            <el-button plain type="success" @click="userRoleQueryHandel">
+            <el-button plain type="success" @click="userRoleCreateDialogHandel">
               <el-icon size="20">
                 <Plus/>
               </el-icon>
+              <RoleCreateDialogs/>
               <span>新 增</span>
             </el-button>
           </el-form-item>
@@ -157,17 +158,14 @@
 </template>
 
 <script setup>
-import {reactive, ref} from 'vue'
+import {reactive, ref, provide} from 'vue'
 import {
-  Refresh,
-  Open,
-  User,
-  Search,
-  Clock,
+  Refresh, Open, User, Search, Clock,
   Coordinate, Plus, EditPen, Delete, CaretBottom
 } from "@element-plus/icons-vue";
 import {userRoleQuery, userRoleMenuQuery} from '@/apis/user_role.js';
 import eventBus from '@/utils/event_bus.js';
+import RoleCreateDialogs from '@/components/user_role/user_role_dialogs/role_create_dialogs.vue'
 
 const userRoleQueryForm = reactive({
   role_name: null,
@@ -200,6 +198,17 @@ const formatDateTimeRange = (datetimeArr) => {
     return formattedDates.join(', ');
   }
 }
+const userRoleQueryFormRefreshHandel = async () => {
+  userRoleQueryForm.role_name = null;
+  userRoleQueryForm.role_level = null;
+  userRoleQueryForm.operator_id = null;
+  userRoleQueryForm.role_status = null;
+  userRoleQueryForm.create_datetime = null;
+  userRoleQueryForm.update_datetime = null;
+  userRoleQueryForm.delete_datetime = null;
+  userRoleQueryForm.number_pages = 1;
+  userRoleQueryForm.number_pieces = 250;
+}
 
 const userRoleQueryHandel = async () => {
   await userRoleMenuQueryHandel()
@@ -215,17 +224,6 @@ const userRoleQueryHandel = async () => {
 }
 
 userRoleQueryHandel()
-const userRoleQueryFormRefreshHandel = async () => {
-  userRoleQueryForm.role_name = null;
-  userRoleQueryForm.role_level = null;
-  userRoleQueryForm.operator_id = null;
-  userRoleQueryForm.role_status = null;
-  userRoleQueryForm.create_datetime = null;
-  userRoleQueryForm.update_datetime = null;
-  userRoleQueryForm.delete_datetime = null;
-  userRoleQueryForm.number_pages = 1;
-  userRoleQueryForm.number_pieces = 250;
-}
 
 const numberPagesChangeHandel = (val) => {
   userRoleQueryForm.number_pages = val;
@@ -234,6 +232,14 @@ const numberPagesChangeHandel = (val) => {
 const numberPiecesChangeHandel = (val) => {
   userRoleQueryForm.number_pieces = val;
 };
+
+const isRoleCreateDialogVisible = ref(false);
+
+
+const userRoleCreateDialogHandel = async () => {
+  isRoleCreateDialogVisible.value = !isRoleCreateDialogVisible.value;
+  eventBus.emit('isRoleCreateDialogVisible', isRoleCreateDialogVisible);
+}
 </script>
 
 <style scoped>
@@ -421,6 +427,6 @@ const numberPiecesChangeHandel = (val) => {
 }
 
 .el-button {
-  width: 90px;
+  width: 92px;
 }
 </style>

@@ -21,8 +21,8 @@
 </template>
 
 <script setup>
-import asideCpt from "@/components/main/aside.vue";
-import headerCpt from "@/components/main/header.vue";
+import asideCpt from "@/components/main/main_aside.vue";
+import headerCpt from "@/components/main/main_header.vue";
 </script>
 
 <style scoped>

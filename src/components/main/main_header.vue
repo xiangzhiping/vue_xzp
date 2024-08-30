@@ -13,7 +13,7 @@
     <el-tooltip content="个人头像" effect="light">
       <div class="personal_avatar">
         <el-avatar v-if="personalAvatarUrl" shape="square" fit="cover" :size="25" :src="personalAvatarUrl"/>
-        <el-icon v-else size="18" color="#a1a2a2"><Avatar/></el-icon>
+        <el-icon v-else size="18" ><Avatar/></el-icon>
       </div>
     </el-tooltip>
   </div>
@@ -50,10 +50,8 @@ const navigateToPersonalHandel = async () => {
 
 <style scoped>
 .right_header{
-  width: 300px;
   height: 50px;
   display: flex;
-  justify-content: right;
   align-items: center;
 }
 .personal_avatar, .personal_logout, .personal_info{
@@ -62,7 +60,7 @@ const navigateToPersonalHandel = async () => {
   margin-right: 5px;
   border: 1px solid var(--el-border-color);
   border-radius: 4px;
-  color: #2c3e50;
+  color: #409EFF;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -81,45 +79,5 @@ const navigateToPersonalHandel = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-
-
-.popover_box{
-  border-radius: 4px;
-  border: 1px solid var(--el-border-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-.popover_box:hover{
-  background: #b0cff8;
-}
-
-.popover_box span{
-  font-size: 20px;
-  margin-left: 10px;
-}
-
-.personal, .logout {
-  width: 120px; /* Increase the width to accommodate the icon and text with some padding */
-  height: 30px;
-  border-radius: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 15px;
-  cursor: pointer;
-  color: #5d5d5d;
-}
-
-.logout {
-  margin-top: 10px;
-}
-
-.personal:hover, .logout:hover {
-  color: #409EFF; /* Blue color on hover */
 }
 </style>

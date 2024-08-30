@@ -85,6 +85,7 @@ const updateUserRoleStatusHandle = async (row) => {
 <style scoped>
 .user_role_body_box {
   width: 100%;
+  border-top: 1px solid var(--el-border-color);
   margin-top: 5px;
   display: flex;
   flex-grow: 1;
