@@ -53,7 +53,7 @@
           <el-form-item>
             <div class="form_head">
               <el-icon color="#707070" size="20">
-                <CaretTop/>
+                <CaretBottom/>
               </el-icon>
             </div>
             <el-select v-model="userRoleQueryForm.role_level" placeholder="角色级别">
@@ -164,7 +164,7 @@ import {
   User,
   Search,
   Clock,
-  Coordinate, Plus, EditPen, Delete, CaretTop
+  Coordinate, Plus, EditPen, Delete, CaretBottom
 } from "@element-plus/icons-vue";
 import {userRoleQuery, userRoleMenuQuery} from '@/apis/user_role.js';
 import eventBus from '@/utils/event_bus.js';
@@ -308,14 +308,15 @@ const numberPiecesChangeHandel = (val) => {
 
 :deep(.el-pagination>.is-first) {
   height: 30px;
-  padding-right: 5px;
-  padding-left: 5px;
+  padding-right: 20px;
+  padding-left: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 4px 0 0 4px;
   border: 1px solid var(--el-border-color);
 }
+
 
 :deep(.el-pagination__goto) {
   height: 30px;
@@ -331,14 +332,18 @@ const numberPiecesChangeHandel = (val) => {
 
 :deep(.el-pagination__classifier) {
   height: 30px;
-  padding-right: 5px;
-  padding-left: 5px;
-  border: 1px solid var(--el-border-color);
+  padding-right: 6px;
+  padding-left: 7px;
   border-radius: 0 4px 4px 0;
+  border: 1px solid var(--el-border-color);
   display: flex;
   justify-content: center;
   align-items: center;
+}
 
+
+:deep(.el-pagination .el-select) {
+  margin-left: -17px;
 }
 
 :deep(.el-pagination__editor>.is-in-pagination) {
@@ -415,4 +420,7 @@ const numberPiecesChangeHandel = (val) => {
   margin-left: 10px;
 }
 
+.el-button {
+  width: 90px;
+}
 </style>

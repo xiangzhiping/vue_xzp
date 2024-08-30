@@ -1,7 +1,7 @@
 <template>
-  <div class="avatar">
+  <div class="personal_avatar">
     <div class="avatar_image">
-      <img v-if="personalAvatarUrl" :src="personalAvatarUrl" alt="头像"/>
+      <el-image v-if="personalAvatarUrl" :src="personalAvatarUrl" alt="头像"/>
       <el-icon v-else size="25" color="#959696">
         <Avatar/>
       </el-icon>
@@ -77,7 +77,7 @@ personalAvatarLinkGetHandel()
 </script>
 
 <style scoped>
-.avatar {
+.personal_avatar {
   width: 240px;
   height: 280px;
   border-radius: 4px;

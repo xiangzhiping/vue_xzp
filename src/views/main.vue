@@ -68,6 +68,7 @@ import headerCpt from "@/components/main/header.vue";
   border-radius: 4px;
   margin-top: 5px;
   display: flex;
+  justify-content: center;
   border-left: 1px solid var(--el-border-color);
   border-top: 1px solid var(--el-border-color);
   box-shadow: var(--el-box-shadow-lighter);

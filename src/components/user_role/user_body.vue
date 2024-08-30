@@ -1,8 +1,8 @@
 <template>
   <div class="user_role_body_box" ref="userRoleBodyRef">
-    <el-table :data="userRoleQueryRes.roles" stripe border
+    <el-table :data="userRoleQueryRes.roles" stripe
               :height="tableHeight"
-              :header-cell-style="{background: '#e5eaf1', color: '#8a8b8d'}">
+              :header-cell-style="{background: '#f5f7fa', color: '#707070'}">
       <el-table-column prop="role_id" label="角色ID" width="100" align="center"></el-table-column>
       <el-table-column prop="role_name" label="角色名称" width="400" align="center"></el-table-column>
       <el-table-column prop="role_level" label="角色级别" width="270" align="center">

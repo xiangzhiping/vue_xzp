@@ -12,10 +12,7 @@ import PersonalInfo from '@/components/personal/personal_info.vue'
 
 <style scoped>
 .personal {
-  width: 100%;
-  height: 100%;
   display: flex;
-  justify-content: left;
-  flex-wrap: wrap;
+  justify-content: center;
 }
 </style>

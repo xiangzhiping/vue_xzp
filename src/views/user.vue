@@ -81,7 +81,7 @@ const changeTab = async (index) => {
 }
 
 .user_container_tab.active {
-  background: #cadef3;
+  background: #eaeaea;
   color: #409EFF;
 }
 

@@ -9,3 +9,6 @@ export const userAccountStatusUpdate = async (req) => {
     return await server.patch('/xzp/user/account/status/update', req)
 };
 
+export const userLogout = async (req) => {
+    return await server.post('/xzp/user/logout', req);
+};
