@@ -158,7 +158,7 @@
 </template>
 
 <script setup>
-import {reactive, ref, provide} from 'vue'
+import {reactive, ref} from 'vue'
 import {
   Refresh, Open, User, Search, Clock,
   Coordinate, Plus, EditPen, Delete, CaretBottom
@@ -178,14 +178,14 @@ const userRoleQueryForm = reactive({
   number_pages: 1,
   number_pieces: 250,
 })
-const roleOptions = reactive({role_levels: [], role_states: []})
+const roleOptions = ref({role_levels: [], role_states: []})
 
 const userRoleMenuQueryHandel = async () => {
   const res = await userRoleMenuQuery()
   if (res.code === 200) {
-    roleOptions.role_levels = res.data.role_levels;
-    roleOptions.role_states = res.data.role_states;
+    roleOptions.value = res.data;
   }
+  eventBus.emit('user_role_menu', res.data);
 }
 
 const result = ref({total: 0, roles: []});
@@ -215,7 +215,6 @@ const userRoleQueryHandel = async () => {
   userRoleQueryForm.create_datetime = formatDateTimeRange(userRoleQueryForm.create_datetime);
   userRoleQueryForm.update_datetime = formatDateTimeRange(userRoleQueryForm.update_datetime);
   userRoleQueryForm.delete_datetime = formatDateTimeRange(userRoleQueryForm.delete_datetime);
-  console.log(userRoleQueryForm)
   const res = await userRoleQuery(userRoleQueryForm)
   if (res.code === 200 || res.code === 204) {
     result.value.total = res.data.total;

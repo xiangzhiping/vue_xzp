@@ -7,12 +7,23 @@
       <el-table-column prop="role_name" label="角色名称" width="400" align="center"></el-table-column>
       <el-table-column prop="role_level" label="角色级别" width="270" align="center">
         <template #default="scope">
-          <el-tag effect="light" :type="getRoleInfo(scope.row.role_level).color">
+          <el-tag effect="plain" :type="getRoleInfo(scope.row.role_level).color">
             {{ getRoleInfo(scope.row.role_level).text }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="paths" label="接口ID列表" width="300" align="center"></el-table-column>
+      <el-table-column prop="paths" label="接口标签列表" width="300" align="center" >
+        <template #default="scope">
+          <el-tag
+              v-for="(path, index) in JSON.parse(scope.row.paths)"
+              :key="index"
+              effect="plain"
+              type="warning"
+              size="small"
+              class="api_tabs"
+          >{{ path.key }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="role_status" label="角色状态" width="120" align="center">
         <template #default="scope">
           <el-switch size="small"
@@ -32,7 +43,7 @@
 
 <script setup>
 import eventBus from '@/utils/event_bus.js';
-import {ref, computed, watchEffect} from 'vue';
+import {ref, computed, onMounted, watchEffect} from 'vue';
 import {userRoleStatusUpdate} from '@/apis/user_role.js';
 
 const userRoleQueryRes = ref({total: 0, roles: []});
@@ -65,22 +76,29 @@ const getRoleInfo = computed(() => (level) => {
 
 const userRoleQueryResHandel = () => {
   const handler = (msg) => {
-    userRoleQueryRes.value = msg.data
+    userRoleQueryRes.value = msg.data;
   };
   eventBus.on('roles', handler);
 };
 
-userRoleQueryResHandel();
-adjustTableHeight();
+onMounted(() => {
+  userRoleQueryResHandel();
+  adjustTableHeight();
+});
+
 watchEffect(() => {
   adjustTableHeight()
-})
+});
 
 const updateUserRoleStatusHandle = async (row) => {
-  await userRoleStatusUpdate({role_id: row.role_id, type: row.role_status});
+  try {
+    await userRoleStatusUpdate({role_id: row.role_id, type: row.role_status});
+  } catch (error) {
+    console.error('Failed to update role status:', error);
+    // 可以在这里添加错误处理逻辑，例如恢复原来的值或显示错误消息
+  }
 };
 </script>
-
 
 <style scoped>
 .user_role_body_box {
@@ -89,5 +107,10 @@ const updateUserRoleStatusHandle = async (row) => {
   margin-top: 5px;
   display: flex;
   flex-grow: 1;
+}
+
+.api_tabs {
+  margin-bottom: 5px;
+  margin-right: 5px;
 }
 </style>

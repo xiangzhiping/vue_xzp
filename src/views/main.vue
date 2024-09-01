@@ -56,6 +56,7 @@ import headerCpt from "@/components/main/main_header.vue";
   width: 50px;
   height: 100%;
   display: flex;
+  align-items: center;
   flex-direction: column;
   border-right: 1px solid var(--el-border-color);
   box-shadow: var(--el-box-shadow-lighter);

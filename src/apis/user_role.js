@@ -14,3 +14,7 @@ export const userRoleStatusUpdate = async (req) => {
     return await server.patch('/xzp/user/role/status/update', req)
 };
 
+
+export const userRoleCreate = async (req) => {
+    return await server.post('/xzp/user/role/create', req)
+};

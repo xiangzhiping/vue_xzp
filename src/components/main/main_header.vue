@@ -60,15 +60,26 @@ const navigateToPersonalHandel = async () => {
   margin-right: 5px;
   border: 1px solid var(--el-border-color);
   border-radius: 4px;
-  color: #409EFF;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.personal_logout:hover, .personal_info:hover{
-  background: #eaeaea;
+.personal_avatar{
+  color: #E6A23C;
+}
+
+.personal_logout{
+  color: #F56C6C;
+}
+
+.personal_info{
+  color: #409EFF;
+}
+
+.personal_logout:hover, .personal_info:hover, .personal_avatar:hover{
+  background: #ededee;
 }
 .el-avatar {
   width: 100%;
