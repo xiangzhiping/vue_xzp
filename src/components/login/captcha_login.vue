@@ -1,139 +1,148 @@
 <template>
-  <div class="captcha_login_card">
-    <div class="captcha_login_body">
-      <transition :name="animationDirection">
+  <div class="captcha_login_container">
+    <div class="captcha_login_container_pane">
+      <transition :name="transitionName">
         <keep-alive>
-          <component :is="currentComponent" class="email_captcha_tab" :key="currentTab"/>
+          <component :is="currentComponent"></component>
         </keep-alive>
       </transition>
     </div>
-    <div class="captcha_login_tail">
-      <el-tooltip content="邮箱验证码登录" placement="bottom" effect="light">
-        <div @click="switchTab('emailTab')" :class="{ active: currentTab === 'emailTab'}">
-          <EmailLoginIcon :iconColor="currentTab === 'emailTab' ? '#495b70' : '#007bff'"/>
-        </div>
-      </el-tooltip>
-      <el-tooltip content="手机验证码登录" placement="bottom" effect="light">
-        <div @click="switchTab('phoneTab')" :class="{ active: currentTab === 'phoneTab'}">
-          <PhoneLoginIcon :iconColor="currentTab === 'phoneTab' ? '#495b70' : '#007bff'"/>
-        </div>
-      </el-tooltip>
+    <div class="captcha_login_container_footer">
+      <div v-for="(tab, index) in tabs" class="captcha_login_container_tab" :class="{ active: index === currentIndex }">
+        <el-tooltip :content="tab.name" effect="light">
+          <div class="captcha_login_container_icon" @click="changeTab(index)">
+            <el-icon :size="22">
+              <component :is="tab.icon"/>
+            </el-icon>
+          </div>
+        </el-tooltip>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import {ref} from 'vue';
-import EmailCaptchaLogin from './captcha_login/email_captcha_login.vue';
-import PhoneCaptchaLogin from './captcha_login/phone_captcha_login.vue';
-import {EmailLoginIcon, PhoneLoginIcon} from "@/components/icons/index.js";
+import {ref, computed} from "vue";
+import {Phone, Message} from '@element-plus/icons-vue'
+import EmailCaptchaLogin from '@/components/login/captcha_login/email_captcha_login.vue';
+import PhoneCaptchaLogin from '@/components/login/captcha_login/phone_captcha_login.vue';
 
-const currentTab = ref('emailTab');
 const currentComponent = ref(EmailCaptchaLogin);
-const animationDirection = ref('slide-fade-right');
+const tabs = [
+  {name: '邮箱验证码登录', icon: Message},
+  {name: '短信验证码登录', icon: Phone},
+];
+const currentIndex = ref(0);
+const previousIndex = ref(currentIndex.value);
+const transitionName = computed(() => {
+  return currentIndex.value < previousIndex.value ? 'slide-fade-right' : 'slide-fade-left';
+});
 
-const tabs = ref([
-  {name: 'emailTab', component: EmailCaptchaLogin},
-  {name: 'phoneTab', component: PhoneCaptchaLogin},
-]);
 
-const switchTab = (newTabName) => {
-  const tab = tabs.value.find(tab => tab.name === newTabName);
-  if (!tab) return;
-  animationDirection.value = animationDirectionGet(currentTab.value, newTabName);
-  currentTab.value = newTabName;
-  currentComponent.value = tab.component;
-};
-
-const animationDirectionGet = (currentTabName, newTabName) => {
-  const newIndex = tabs.value.findIndex(tab => tab.name === newTabName);
-  if (tabs.value.findIndex(tab => tab.name === currentTabName) > newIndex) {
-    return 'slide-fade-left';
-  } else {
-    return 'slide-fade-right';
+const changeTab = async (index) => {
+  previousIndex.value = currentIndex.value;
+  currentIndex.value = index;
+  switch (index) {
+    case 0:
+      currentComponent.value = EmailCaptchaLogin;
+      break
+    case 1:
+      currentComponent.value = PhoneCaptchaLogin;
   }
-};
+}
 </script>
 
 <style scoped>
-.captcha_login_card {
+.captcha_login_container {
   width: 100%;
   height: 100%;
-  color: #909399;
-  font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
   display: flex;
   flex-direction: column;
 }
 
-.captcha_login_body {
+.captcha_login_container_pane {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex-grow: 1;
   position: relative;
 }
 
-.captcha_login_tail {
+
+.captcha_login_container_footer {
   width: 100%;
-  height: 80px;
+  height: 50px;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
 }
 
-.email_captcha_tab {
+.captcha_login_container_icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.captcha_login_container_tab {
+  width: 125px;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  color: #bbbbbb;
+  justify-content: center;
+  align-items: center;
+}
+
+.captcha_login_container_tab.active {
+  color: #67C23A;
+}
+
+.slide-fade-left-enter-active,
+.slide-fade-left-leave-active,
+.slide-fade-right-enter-active,
+.slide-fade-right-leave-active {
+  transition: all 0.5s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  position: absolute;
-}
-
-.slide-fade-right-enter-active,
-.slide-fade-right-leave-active,
-.slide-fade-left-enter-active,
-.slide-fade-left-leave-active {
-  transition: all 0.7s ease;
-}
-
-.slide-fade-right-enter-from {
-  transform: translate3d(100%, 0, 0);
-}
-
-.slide-fade-right-leave-to {
-  transform: translate3d(-100%, 0, 0);
 }
 
 .slide-fade-left-enter-from {
-  transform: translate3d(-100%, 0, 0);
+  transform: translateX(-100%);
+}
+
+.slide-fade-left-enter-to {
+  transform: translateX(0);
+}
+
+.slide-fade-left-leave-from {
+  transform: translateX(0);
 }
 
 .slide-fade-left-leave-to {
-  transform: translate3d(100%, 0, 0);
+  transform: translateX(100%);
 }
 
-.captcha_login_tail div {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
+.slide-fade-right-enter-from {
+  transform: translateX(100%);
 }
 
-.captcha_login_tail div.active {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #ebedf0;
-  border-radius: 50%;
+.slide-fade-right-enter-to {
+  transform: translateX(0);
 }
 
-/* 添加图标容器的样式 */
-.tab_icon {
-  width: 45px;
-  height: 45px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #ebedf0;
-  border-radius: 50%;
+.slide-fade-right-leave-from {
+  transform: translateX(0);
 }
+
+.slide-fade-right-leave-to {
+  transform: translateX(-100%);
+}
+
 </style>

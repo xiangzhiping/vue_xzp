@@ -396,7 +396,7 @@ const userRoleCreateDialogHandel = async () => {
 }
 
 .button_query {
-  height: 32px;
+  height: 29px;
   width: 503px;
   border-radius: 4px;
   margin-top: 6px;

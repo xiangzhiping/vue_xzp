@@ -41,7 +41,7 @@ const personalAvatarGetHandle = async () => {
   const image = await personalAvatarDownload(url);
   personalAvatarUrl.value = URL.createObjectURL(image);
 };
-// personalAvatarGetHandle();
+personalAvatarGetHandle();
 
 const navigateToPersonalHandel = async () => {
   await router.push('/personal')

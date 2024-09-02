@@ -4,7 +4,9 @@
       <el-form-item prop="account" class="item_form">
         <div class="login_ele">
           <div class="email_captcha_login_icon">
-            <EmailIcon></EmailIcon>
+            <el-icon :size="22" style="color: #979798">
+              <Message></Message>
+            </el-icon>
           </div>
           <div class="email_input">
             <el-input v-model="loginForm.account" placeholder="请输入邮箱号"></el-input>
@@ -15,7 +17,9 @@
         <div class="login_ele">
           <div class="captcha_input">
             <div class="email_captcha_login_icon">
-              <EmailCaptchaIcon></EmailCaptchaIcon>
+              <el-icon :size="22" style="color: #979798">
+                <ChatDotSquare></ChatDotSquare>
+              </el-icon>
             </div>
             <div class="email_captcha_input">
               <el-input v-model="loginForm.captcha" placeholder="请输入邮箱验证码"></el-input>
@@ -27,7 +31,7 @@
         </div>
       </el-form-item>
       <div class="login_ele">
-        <el-button type="primary" class="login_button" @click="userEmailCaptchaLoginHandel">登 录</el-button>
+        <el-button type="success" plain class="login_button" @click="userEmailCaptchaLoginHandel">登 录</el-button>
       </div>
     </el-form>
   </div>
@@ -35,7 +39,7 @@
 
 <script setup>
 import {ref, reactive, watch} from 'vue';
-import {Promotion} from '@element-plus/icons-vue';
+import {ChatDotSquare, Message, Promotion} from '@element-plus/icons-vue';
 import router from "@/router.js";
 import {userEmailCaptchaLogin, identityCaptchaSend} from '@/apis/login.js';
 import {EmailIcon, EmailCaptchaIcon} from "@/components/icons/index.js";
@@ -161,6 +165,12 @@ function emailValidator(rule, value, callback) {
   margin: 0; /* 清除外边距 */
 }
 
+.el-input {
+  --el-input-border-radius: 0 4px 4px 0;
+  --el-input-focus-border-color: #67C23A
+}
+
+
 .login_button {
   width: 100%;
   height: 40px;
@@ -176,7 +186,6 @@ function emailValidator(rule, value, callback) {
   justify-content: center;
   align-items: center;
   border-radius: 4px 0 0 4px;
-  background: #f1f1f1;
 }
 
 .el-input {
