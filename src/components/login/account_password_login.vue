@@ -88,13 +88,11 @@ const userAccountPasswordLoginHandel = async () => {
   formRef.value.validate(async (valid) => {
     if (valid) {
       const res = await userAccountPasswordLogin(loginForm)
-      console.log(res)
       if (res.code === 200) {
         await router.push('/dashboard')
         localStorage.setItem("Authorization", res.data)
       }
     } else {
-      console.log(valid);
       return valid
     }
   })

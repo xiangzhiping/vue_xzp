@@ -1,36 +1,5 @@
 <template>
-  <div class="el-card" :style="{boxShadow: `var(--el-box-shadow-lighter)` }">
-    <div class="card_head">XIANGZHIPING</div>
-    <div class="card_body">
-      <transition :name="animationDirection">
-        <keep-alive>
-          <component :is="currentComponent" class="card_tab" :key="currentTab"></component>
-        </keep-alive>
-      </transition>
-    </div>
-    <div class="card_tail">
-      <el-tooltip content="账号密码登录" placement="bottom" effect="light">
-        <div @click="switchTab('accountPasswordLoginTab')" :class="{ active: currentTab === 'accountPasswordLoginTab'}">
-          <AccountPasswordLoginIcon/>
-        </div>
-      </el-tooltip>
-      <el-tooltip content="验证码登录" placement="bottom" effect="light">
-        <div @click="switchTab('captchaLoginTab')" :class="{ active: currentTab === 'captchaLoginTab'}">
-          <CaptchaLoginIcon/>
-        </div>
-      </el-tooltip>
-      <el-tooltip content="忘记密码" placement="bottom" effect="light">
-        <div @click="switchTab('forgetPasswordTab')" :class="{ active: currentTab === 'forgetPasswordTab'}">
-          <ForgetPasswordIcon/>
-        </div>
-      </el-tooltip>
-      <el-tooltip content="注册账号" placement="bottom" effect="light">
-        <div @click="switchTab('registerAccountTab')" :class="{ active: currentTab === 'registerAccountTab'}">
-          <RegisterAccountIcon/>
-        </div>
-      </el-tooltip>
-    </div>
-  </div>
+
 </template>
 
 <script setup>

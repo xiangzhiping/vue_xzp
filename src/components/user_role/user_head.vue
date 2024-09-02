@@ -135,22 +135,6 @@
               <span>新 增</span>
             </el-button>
           </el-form-item>
-          <el-form-item class="button_item">
-            <el-button plain type="warning" @click="userRoleQueryHandel">
-              <el-icon size="20">
-                <EditPen/>
-              </el-icon>
-              <span>修 改</span>
-            </el-button>
-          </el-form-item>
-          <el-form-item class="button_item">
-            <el-button plain type="danger" @click="userRoleQueryHandel">
-              <el-icon size="20">
-                <Delete/>
-              </el-icon>
-              <span>删 除</span>
-            </el-button>
-          </el-form-item>
         </div>
       </div>
     </div>
@@ -161,7 +145,7 @@
 import {reactive, ref} from 'vue'
 import {
   Refresh, Open, User, Search, Clock,
-  Coordinate, Plus, EditPen, Delete, CaretBottom
+  Coordinate, Plus, EditPen, CaretBottom
 } from "@element-plus/icons-vue";
 import {userRoleQuery, userRoleMenuQuery} from '@/apis/user_role.js';
 import eventBus from '@/utils/event_bus.js';
@@ -405,7 +389,6 @@ const userRoleCreateDialogHandel = async () => {
   border-left: 1px solid var(--el-border-color);
   border-bottom: 1px solid var(--el-border-color);
   border-right: 0;
-  background: #f5f7fa;
   border-radius: 4px 0 0 4px;
   display: flex;
   justify-content: center;
@@ -414,16 +397,14 @@ const userRoleCreateDialogHandel = async () => {
 
 .button_query {
   height: 32px;
+  width: 503px;
   border-radius: 4px;
   margin-top: 6px;
   display: flex;
-  justify-content: left;
+  justify-content: space-between;
   align-items: center;
 }
 
-.button_item {
-  margin-left: 10px;
-}
 
 .el-button {
   width: 92px;

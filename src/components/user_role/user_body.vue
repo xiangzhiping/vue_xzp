@@ -1,6 +1,6 @@
 <template>
   <div class="user_role_body_box" ref="userRoleBodyRef">
-    <el-table :data="userRoleQueryRes.roles" stripe
+    <el-table :data="userRoles.roles" stripe
               :height="tableHeight"
               :header-cell-style="{background: '#f5f7fa', color: '#707070'}">
       <el-table-column prop="role_id" label="角色ID" width="100" align="center"></el-table-column>
@@ -12,7 +12,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="paths" label="接口标签列表" width="300" align="center" >
+      <el-table-column prop="paths" label="接口标签列表" width="700" align="center">
         <template #default="scope">
           <el-tag
               v-for="(path, index) in JSON.parse(scope.row.paths)"
@@ -21,22 +21,26 @@
               type="warning"
               size="small"
               class="api_tabs"
-          >{{ path.key }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="role_status" label="角色状态" width="120" align="center">
-        <template #default="scope">
-          <el-switch size="small"
-                     v-model="scope.row.role_status"
-                     @change="updateUserRoleStatusHandle(scope.row)"
-                     style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-          ></el-switch>
+          >{{ path.key }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="operator_id" label="操作者ID" width="185" align="center"></el-table-column>
       <el-table-column prop="create_datetime" label="创建日期时间" width="160" align="center"></el-table-column>
       <el-table-column prop="update_datetime" label="更新日期时间" width="160" align="center"></el-table-column>
       <el-table-column prop="delete_datetime" label="删除日期时间" width="160" align="center"></el-table-column>
+      <el-table-column label="删除" align="center">
+        <template #default="scope">
+          <el-button size="small" plain type="danger"
+                     @click="userRoleDeleteHandel(scope.$index, scope.row)"
+                     :loading="userRoleDeleteLoadings[scope.$index]">
+            <el-icon size="16">
+              <Delete/>
+            </el-icon>
+            <span>删 除</span>
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -44,14 +48,13 @@
 <script setup>
 import eventBus from '@/utils/event_bus.js';
 import {ref, computed, onMounted, watchEffect} from 'vue';
-import {userRoleStatusUpdate} from '@/apis/user_role.js';
+import {userRoleDelete} from '@/apis/user_role.js';
+import {Delete} from "@element-plus/icons-vue";
 
-const userRoleQueryRes = ref({total: 0, roles: []});
-
+const userRoles = ref({total: 0, roles: []});
 const userRoleBodyRef = ref(null);
-const tableHeight = computed(() => {
-  return userRoleBodyRef.value ? userRoleBodyRef.value.clientHeight - 2 : 'auto';
-});
+const tableHeight = computed(() => userRoleBodyRef.value ? userRoleBodyRef.value.clientHeight - 2 : 'auto');
+const userRoleDeleteLoadings = ref([]);
 
 const adjustTableHeight = () => {
   if (userRoleBodyRef.value) {
@@ -76,7 +79,7 @@ const getRoleInfo = computed(() => (level) => {
 
 const userRoleQueryResHandel = () => {
   const handler = (msg) => {
-    userRoleQueryRes.value = msg.data;
+    userRoles.value = msg.data;
   };
   eventBus.on('roles', handler);
 };
@@ -90,13 +93,15 @@ watchEffect(() => {
   adjustTableHeight()
 });
 
-const updateUserRoleStatusHandle = async (row) => {
-  try {
-    await userRoleStatusUpdate({role_id: row.role_id, type: row.role_status});
-  } catch (error) {
-    console.error('Failed to update role status:', error);
-    // 可以在这里添加错误处理逻辑，例如恢复原来的值或显示错误消息
+const userRoleDeleteHandel = async (index, row) => {
+  userRoleDeleteLoadings.value[index] = true;
+  const res = await userRoleDelete({role_id: row.role_id});
+  console.log(res)
+  if (res.code === 200) {
+    userRoles.value.roles.splice(index, 1);
+    userRoleDeleteLoadings.value[index] = false;
   }
+  userRoleDeleteLoadings.value[index] = false;
 };
 </script>
 
@@ -112,5 +117,9 @@ const updateUserRoleStatusHandle = async (row) => {
 .api_tabs {
   margin-bottom: 5px;
   margin-right: 5px;
+}
+
+.el-button span {
+  font-size: 15px;
 }
 </style>
