@@ -47,7 +47,7 @@ service.interceptors.response.use(function (response) {
     if (response.status === 200) {
         if (response.headers['content-type'] === 'application/json') {
             const res = response.data;
-            if (res.code <= 300) {
+            if (res.code < 300) {
                 ElMessage.success(res.msg);
                 return res;
             } else if ((res.code === 401 && res.data === 'AUTH_FAILED') || (res.code === 403 && res.data === 'AUTH_FAILED')) {
@@ -59,7 +59,7 @@ service.interceptors.response.use(function (response) {
                     router.push('/login').then(r => null);
                 })
                 return res;
-            } else if (300 < res.code < 500) {
+            } else if (300 <= res.code < 500) {
                 if (res.msg) {
                     ElMessage.warning(res.msg);
                 }

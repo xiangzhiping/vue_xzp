@@ -399,7 +399,7 @@ const userRoleCreateDialogHandel = async () => {
   height: 29px;
   width: 503px;
   border-radius: 4px;
-  margin-top: 6px;
+  margin-top: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
