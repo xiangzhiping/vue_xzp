@@ -1,13 +1,13 @@
 <template>
   <div class="user_role_body_box" ref="userRoleBodyRef">
-    <el-table :data="userRoles.roles" stripe
+    <el-table :data="userRoleQueryRes.roles" stripe
               :height="tableHeight"
-              :header-cell-style="{background: '#f5f7fa', color: '#707070'}">
+              :header-cell-style="{background: '#f5f7fa', color: '#707070'}" style="font-family: '微软雅黑 Light',serif">
       <el-table-column prop="role_id" label="角色ID" width="100" align="center"></el-table-column>
       <el-table-column prop="role_name" label="角色名称" width="400" align="center"></el-table-column>
       <el-table-column prop="role_level" label="角色级别" width="270" align="center">
         <template #default="scope">
-          <el-tag effect="plain" :type="getRoleInfo(scope.row.role_level).color">
+          <el-tag effect="plain" size="small" :type="getRoleInfo(scope.row.role_level).color">
             {{ getRoleInfo(scope.row.role_level).text }}
           </el-tag>
         </template>
@@ -29,7 +29,7 @@
       <el-table-column prop="create_datetime" label="创建日期时间" width="160" align="center"></el-table-column>
       <el-table-column prop="update_datetime" label="更新日期时间" width="160" align="center"></el-table-column>
       <el-table-column prop="delete_datetime" label="删除日期时间" width="160" align="center"></el-table-column>
-      <el-table-column label="删除" align="center">
+      <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button size="small" plain type="danger"
                      @click="userRoleDeleteHandel(scope.$index, scope.row)"
@@ -51,7 +51,7 @@ import {ref, computed, onMounted, watchEffect} from 'vue';
 import {userRoleDelete} from '@/apis/user_role.js';
 import {Delete} from "@element-plus/icons-vue";
 
-const userRoles = ref({total: 0, roles: []});
+const userRoleQueryRes = ref({total: 0, roles: []});
 const userRoleBodyRef = ref(null);
 const tableHeight = computed(() => userRoleBodyRef.value ? userRoleBodyRef.value.clientHeight - 2 : 'auto');
 const userRoleDeleteLoadings = ref([]);
@@ -79,7 +79,7 @@ const getRoleInfo = computed(() => (level) => {
 
 const userRoleQueryResHandel = () => {
   const handler = (msg) => {
-    userRoles.value = msg.data;
+    userRoleQueryRes.value = msg.data;
   };
   eventBus.on('roles', handler);
 };
@@ -98,7 +98,7 @@ const userRoleDeleteHandel = async (index, row) => {
   const res = await userRoleDelete({role_id: row.role_id});
   console.log(res)
   if (res.code === 200) {
-    userRoles.value.roles.splice(index, 1);
+    userRoleQueryRes.value.roles.splice(index, 1);
     userRoleDeleteLoadings.value[index] = false;
   }
   userRoleDeleteLoadings.value[index] = false;
