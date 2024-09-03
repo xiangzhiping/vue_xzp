@@ -1,45 +1,20 @@
 <template>
   <div class="captcha_login_card">
-    <el-form :model="passwordResetForm" :rules="rules" ref="formRef">
-      <el-form-item prop="account" class="item_form">
-        <div class="login_ele">
-          <div class="email_captcha_login_icon">
-            <EmailIcon></EmailIcon>
-          </div>
-          <div class="email_input">
-            <el-input v-model="passwordResetForm.account" placeholder="请输入邮箱号"></el-input>
-          </div>
-        </div>
-      </el-form-item>
-      <el-form-item prop="account" class="item_form">
-        <div class="login_ele">
-          <div class="email_captcha_login_icon">
-            <PasswordIcon></PasswordIcon>
-          </div>
-          <div class="email_input">
-            <el-input v-model="passwordResetForm.password" placeholder="请输入新的密码"></el-input>
-          </div>
-        </div>
-      </el-form-item>
-      <el-form-item prop="captcha" class="item_form_captcha">
-        <div class="login_ele">
-          <div class="captcha_input">
-            <div class="email_captcha_login_icon">
-              <EmailCaptchaIcon></EmailCaptchaIcon>
-            </div>
-            <div class="email_captcha_input">
-              <el-input v-model="passwordResetForm.captcha" placeholder="请输入邮箱验证码"></el-input>
-            </div>
-          </div>
-          <el-button :icon="Promotion" type="info" class="captcha_button" :disabled="isCountingDown"
-                     @click="emailCaptchaSendHandel">{{ buttonText }}
-          </el-button>
-        </div>
-      </el-form-item>
-      <div class="login_ele">
-        <el-button type="primary" class="login_button" @click="userPasswordResetHandel">重 置 密 码</el-button>
+    <a-form>
+      <a-form-item>
+        <a-input></a-input>
+      </a-form-item>
+      <div style="display: flex">
+        <div class="saddsa"></div>
+        <a-select style="height: 40px;width: 300px">
+          <a-select-option value="jack">Jack</a-select-option>
+          <a-select-option value="lucy">Lucy</a-select-option>
+          <a-select-option value="disabled" disabled>Disabled</a-select-option>
+          <a-select-option value="Yiminghe">yiminghe</a-select-option>
+        </a-select>
       </div>
-    </el-form>
+    </a-form>
+
   </div>
 </template>
 
@@ -147,6 +122,18 @@ function emailValidator(rule, value, callback) {
 </script>
 
 <style scoped>
+.saddsa{
+  width: 40px;
+  height: 40px;
+  border-bottom: 1px solid #d9d9d9;
+  border-left: 1px solid #d9d9d9;
+  border-top: 1px solid #d9d9d9;
+
+}
+:deep(.ant-select-single .ant-select-selector){
+  border-radius: 0;
+  height: 40px;
+}
 .login_ele {
   width: 330px;
   height: 40px;
@@ -191,8 +178,15 @@ function emailValidator(rule, value, callback) {
   background: #f1f1f1;
 }
 
-.el-input {
-  --el-input-border-radius: 0 4px 4px 0;
+.ant-input {
+  width: 300px;
+  height: 40px;
+  border-radius: 4px;
+}
+
+:where(.ant-select){
+  width: 100%;
+  height: 40px;
 }
 
 .captcha_input {
