@@ -65,21 +65,6 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Open/>
-              </el-icon>
-            </div>
-            <el-select v-model="userRoleQueryForm.role_status" placeholder="角色状态">
-              <el-option
-                  v-for="item in roleOptions.role_states"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
         </div>
         <div class="date_picker_query">
           <el-form-item>
@@ -251,7 +236,7 @@ const userRoleCreateDialogHandel = async () => {
   width: 100%;
   height: auto;
   display: flex;
-  justify-content: left;
+  justify-content: space-around;
   flex-wrap: wrap;
 }
 
@@ -259,18 +244,23 @@ const userRoleCreateDialogHandel = async () => {
   font-size: 18px;
 }
 
+
+
 .date_picker_form1, .date_picker_input_form, .input_select_form {
-  width: 320px;
+  width: 330px;
   margin-top: 5px;
+}
+
+.el-input {
+  width: 279px;
 }
 
 .pagination_select_button_form {
   margin-top: 5px;
-  width: 550px;
 }
 
 .date_picker_query {
-  width: 310px;
+  width: 315px;
 }
 
 
@@ -282,9 +272,6 @@ const userRoleCreateDialogHandel = async () => {
   margin-top: 5px;
 }
 
-.el-input {
-  width: 279px;
-}
 
 .el-button {
   height: 32px;
@@ -292,13 +279,13 @@ const userRoleCreateDialogHandel = async () => {
 }
 
 .select_query {
-  width: 310px;
+  width: 390px;
   display: flex;
   justify-content: space-between;
 }
 
 .el-select {
-  width: 120px;
+  width: 278px;
 }
 
 .el-form-item {
@@ -307,23 +294,29 @@ const userRoleCreateDialogHandel = async () => {
   justify-content: left;
 }
 
+:deep(.el-pagination .el-select){
+  margin-left: -10px;
+}
+
 .pagination_query {
   height: 31px;
 }
 
 :deep(.el-pagination) {
   --el-pagination-button-height: 30px;
+  --el-pagination-item-gap: 5px;
   margin-top: -1px;
 }
 
 :deep(.el-pagination>.is-first) {
   height: 30px;
-  padding-right: 20px;
+  padding-right: 25px;
   padding-left: 20px;
+  margin-right: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 4px 0 0 4px;
+  border-radius: 4px;
   border: 1px solid var(--el-border-color);
 }
 
@@ -332,8 +325,9 @@ const userRoleCreateDialogHandel = async () => {
   height: 30px;
   padding-right: 5px;
   padding-left: 5px;
+  margin-left: -3px;
   border: 1px solid var(--el-border-color);
-  border-radius: 4px 0 0 4px;
+  border-radius: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -342,27 +336,16 @@ const userRoleCreateDialogHandel = async () => {
 
 :deep(.el-pagination__classifier) {
   height: 30px;
+  margin-left: 5px;
   padding-right: 6px;
   padding-left: 7px;
-  border-radius: 0 4px 4px 0;
+  border-radius: 4px;
   border: 1px solid var(--el-border-color);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-
-:deep(.el-pagination .el-select) {
-  margin-left: -17px;
-}
-
-:deep(.el-pagination__editor>.is-in-pagination) {
-  border-radius: 0 4px 4px 0;
-}
-
-:deep(.el-input ) {
-  border: none;
-}
 
 :deep( .el-select--default) {
   border-radius: 4px;
@@ -394,23 +377,12 @@ const userRoleCreateDialogHandel = async () => {
 }
 
 
-:deep(.el-input__wrapper ) {
-  border-radius: 0 4px 4px 0;
-}
-
-:deep(.el-select__wrapper, .el-input) {
-  border-radius: 0 4px 4px 0;
-}
-
-
 .form_head {
   width: 30px;
   height: 30px;
-  border-top: 1px solid var(--el-border-color);
-  border-left: 1px solid var(--el-border-color);
-  border-bottom: 1px solid var(--el-border-color);
-  border-right: 0;
-  border-radius: 4px 0 0 4px;
+  border: 1px solid #DCDFE6FF;
+  margin-right: 5px;
+  border-radius: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -418,9 +390,7 @@ const userRoleCreateDialogHandel = async () => {
 
 .button_query {
   height: 29px;
-  width: 503px;
-  border-radius: 4px;
-  margin-top: 6px;
+  margin-top: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;

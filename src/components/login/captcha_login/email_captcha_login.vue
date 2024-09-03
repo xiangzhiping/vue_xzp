@@ -25,7 +25,7 @@
               <el-input v-model="loginForm.captcha" placeholder="请输入邮箱验证码"></el-input>
             </div>
           </div>
-          <el-button :icon="Promotion" type="info" class="captcha_button" :disabled="isCountingDown"
+          <el-button :icon="Promotion" type="info" plain class="captcha_button" :disabled="isCountingDown"
                      @click="emailCaptchaSendHandel">{{ buttonText }}
           </el-button>
         </div>
