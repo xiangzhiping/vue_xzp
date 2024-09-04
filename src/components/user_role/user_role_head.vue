@@ -4,13 +4,15 @@
       <div class="icon_box">
         <FieldTimeOutlined/>
       </div>
-      <a-range-picker v-model="userRoleForm.create_datetime" show-time :placeholder="['创建开始日期时间', '创建结束日期时间']"/>
+      <a-range-picker v-model="userRoleForm.create_datetime" show-time
+                      :placeholder="['创建开始日期时间', '创建结束日期时间']"/>
     </a-space-compact>
     <a-space-compact>
       <div class="icon_box">
         <FieldTimeOutlined/>
       </div>
-      <a-range-picker v-model="userRoleForm.update_datetime" show-time :placeholder="['更新开始日期时间', '更新结束日期时间']"/>
+      <a-range-picker v-model="userRoleForm.update_datetime" show-time
+                      :placeholder="['更新开始日期时间', '更新结束日期时间']"/>
     </a-space-compact>
     <a-space-compact>
       <div class="icon_box">
@@ -26,6 +28,12 @@
         <a-select-option value="lucy">Lucy</a-select-option>
       </a-select>
     </a-space-compact>
+    <a-space-compact>
+      <a-button>
+        <SearchOutlined/>
+        查 询
+      </a-button>
+    </a-space-compact>
   </div>
 </template>
 
@@ -33,7 +41,7 @@
 import {reactive, ref} from 'vue'
 import {userRoleQuery, userRoleMenuQuery} from '@/apis/user_role.js';
 import eventBus from '@/utils/event_bus.js';
-import {ItalicOutlined, FieldTimeOutlined, CrownOutlined, SettingOutlined} from '@ant-design/icons-vue';
+import {ItalicOutlined, FieldTimeOutlined, RestFilled, SearchOutlined} from '@ant-design/icons-vue';
 import RoleCreateDialogs from '@/components/user_role/user_role_dialogs/role_create_dialogs.vue'
 
 const userRoleForm = reactive({
@@ -114,20 +122,25 @@ const userRoleCreateDialogHandel = async () => {
   display: flex;
 }
 
-.ant-space-compact{
+.ant-space-compact {
   margin-top: 5px;
   width: 355px;
 }
 
-.ant-space-compact:nth-child(3){
+.ant-space-compact:nth-child(3) {
   margin-top: 5px;
   width: 285px;
+}
+
+.ant-space-compact:nth-child(4) {
+  margin-top: 5px;
+  width: 195px;
 }
 
 .icon_box {
   width: 32px;
   height: 32px;
-  border-radius: 4px 0 0 4px;
+  border-radius: 3px 0 0 3px;
   border-bottom: 1px solid #d9d9d9;
   border-left: 1px solid #d9d9d9;
   border-top: 1px solid #d9d9d9;
@@ -138,7 +151,7 @@ const userRoleCreateDialogHandel = async () => {
   color: #54667c;
 }
 
-.ant-input-affix-wrapper{
+.ant-input-affix-wrapper {
   border-radius: 3px;
   width: 240px;
   padding-left: 5px;
@@ -154,8 +167,15 @@ const userRoleCreateDialogHandel = async () => {
   display: none;
 }
 
-.ant-select-selector{
+:deep(.ant-select-single .ant-select-selector) {
   width: 150px;
   border-radius: 3px;
+}
+.ant-btn{
+  font-size: 16px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
