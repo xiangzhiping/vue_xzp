@@ -1,16 +1,30 @@
 <template>
   <div class="user_role_head">
-    <a-space-compact style="width: 300px">
+    <a-space-compact>
       <div class="icon_box">
-        <ItalicOutlined/>
+        <FieldTimeOutlined/>
       </div>
-      <a-input v-model="userRoleQueryForm.role_name"/>
+      <a-range-picker v-model="userRoleForm.create_datetime" show-time :placeholder="['创建开始日期时间', '创建结束日期时间']"/>
     </a-space-compact>
     <a-space-compact>
       <div class="icon_box">
         <FieldTimeOutlined/>
       </div>
-      <a-range-picker v-model="userRoleQueryForm.create_datetime" show-time :placeholder="['sadasd', 'asdfs']"/>
+      <a-range-picker v-model="userRoleForm.update_datetime" show-time :placeholder="['更新开始日期时间', '更新结束日期时间']"/>
+    </a-space-compact>
+    <a-space-compact>
+      <div class="icon_box">
+        <ItalicOutlined/>
+      </div>
+      <a-input v-model="userRoleForm.role_name" placeholder="角色名称（支持起始关键字匹配）" allow-clear/>
+    </a-space-compact>
+    <a-space-compact>
+      <div class="icon_box">
+        <ItalicOutlined/>
+      </div>
+      <a-select v-model="userRoleForm.role_level">
+        <a-select-option value="lucy">Lucy</a-select-option>
+      </a-select>
     </a-space-compact>
   </div>
 </template>
@@ -22,14 +36,12 @@ import eventBus from '@/utils/event_bus.js';
 import {ItalicOutlined, FieldTimeOutlined, CrownOutlined, SettingOutlined} from '@ant-design/icons-vue';
 import RoleCreateDialogs from '@/components/user_role/user_role_dialogs/role_create_dialogs.vue'
 
-const userRoleQueryForm = reactive({
+const userRoleForm = reactive({
   role_name: null,
   role_level: null,
   operator_id: null,
-  role_status: null,
   create_datetime: null,
   update_datetime: null,
-  delete_datetime: null,
   number_pages: 1,
   number_pieces: 250,
 })
@@ -53,24 +65,24 @@ const formatDateTimeRange = (datetimeArr) => {
     return formattedDates.join(', ');
   }
 }
-const userRoleQueryFormRefreshHandel = async () => {
-  userRoleQueryForm.role_name = null;
-  userRoleQueryForm.role_level = null;
-  userRoleQueryForm.operator_id = null;
-  userRoleQueryForm.role_status = null;
-  userRoleQueryForm.create_datetime = null;
-  userRoleQueryForm.update_datetime = null;
-  userRoleQueryForm.delete_datetime = null;
-  userRoleQueryForm.number_pages = 1;
-  userRoleQueryForm.number_pieces = 250;
+const userRoleFormRefreshHandel = async () => {
+  userRoleForm.role_name = null;
+  userRoleForm.role_level = null;
+  userRoleForm.operator_id = null;
+  userRoleForm.role_status = null;
+  userRoleForm.create_datetime = null;
+  userRoleForm.update_datetime = null;
+  userRoleForm.delete_datetime = null;
+  userRoleForm.number_pages = 1;
+  userRoleForm.number_pieces = 250;
 }
 
 const userRoleQueryHandel = async () => {
   await userRoleMenuQueryHandel()
-  userRoleQueryForm.create_datetime = formatDateTimeRange(userRoleQueryForm.create_datetime);
-  userRoleQueryForm.update_datetime = formatDateTimeRange(userRoleQueryForm.update_datetime);
-  userRoleQueryForm.delete_datetime = formatDateTimeRange(userRoleQueryForm.delete_datetime);
-  const res = await userRoleQuery(userRoleQueryForm)
+  userRoleForm.create_datetime = formatDateTimeRange(userRoleForm.create_datetime);
+  userRoleForm.update_datetime = formatDateTimeRange(userRoleForm.update_datetime);
+  userRoleForm.delete_datetime = formatDateTimeRange(userRoleForm.delete_datetime);
+  const res = await userRoleQuery(userRoleForm)
   if (res.code === 200 || res.code === 204) {
     result.value.total = res.data.total;
     eventBus.emit('roles', res);
@@ -80,11 +92,11 @@ const userRoleQueryHandel = async () => {
 userRoleQueryHandel()
 
 const numberPagesChangeHandel = (val) => {
-  userRoleQueryForm.number_pages = val;
+  userRoleForm.number_pages = val;
 };
 
 const numberPiecesChangeHandel = (val) => {
-  userRoleQueryForm.number_pieces = val;
+  userRoleForm.number_pieces = val;
 };
 
 const isRoleCreateDialogVisible = ref(false);
@@ -102,6 +114,16 @@ const userRoleCreateDialogHandel = async () => {
   display: flex;
 }
 
+.ant-space-compact{
+  margin-top: 5px;
+  width: 355px;
+}
+
+.ant-space-compact:nth-child(3){
+  margin-top: 5px;
+  width: 285px;
+}
+
 .icon_box {
   width: 32px;
   height: 32px;
@@ -116,8 +138,11 @@ const userRoleCreateDialogHandel = async () => {
   color: #54667c;
 }
 
-.ant-input {
+.ant-input-affix-wrapper{
   border-radius: 3px;
+  width: 240px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .ant-picker {
@@ -127,5 +152,10 @@ const userRoleCreateDialogHandel = async () => {
 
 :deep(.ant-picker-suffix) {
   display: none;
+}
+
+.ant-select-selector{
+  width: 150px;
+  border-radius: 3px;
 }
 </style>
