@@ -1,28 +1,31 @@
 <template>
-  <div class="main_container">
-    <div class="header_box">
-      <headerCpt/>
-    </div>
-    <div class="container_box">
-      <div class="aside_box">
-        <asideCpt></asideCpt>
+  <a-config-provider :locale="zhCN">
+    <div class="main_container">
+      <div class="header_box">
+        <headerCpt/>
       </div>
-      <div class="main_box">
-        <transition name="el-zoom-in-top">
-          <router-view v-slot="{ Component }">
-            <keep-alive>
-              <component :is="Component"/>
-            </keep-alive>
-          </router-view>
-        </transition>
+      <div class="container_box">
+        <div class="aside_box">
+          <asideCpt></asideCpt>
+        </div>
+        <div class="main_box">
+          <transition name="el-zoom-in-top">
+            <router-view v-slot="{ Component }">
+              <keep-alive>
+                <component :is="Component"/>
+              </keep-alive>
+            </router-view>
+          </transition>
+        </div>
       </div>
     </div>
-  </div>
+  </a-config-provider>
 </template>
 
 <script setup>
 import asideCpt from "@/components/main/main_aside.vue";
 import headerCpt from "@/components/main/main_header.vue";
+import zhCN from 'ant-design-vue/es/locale/zh_CN';
 </script>
 
 <style scoped>

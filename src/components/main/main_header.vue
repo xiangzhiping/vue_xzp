@@ -64,6 +64,7 @@ const navigateToPersonalHandel = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .personal_avatar{

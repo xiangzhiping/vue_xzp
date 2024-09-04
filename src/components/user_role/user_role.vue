@@ -1,12 +1,12 @@
 <script setup>
-import UserHead from "@/components/user_role/user_head.vue";
+import UserHead from "@/components/user_role/user_role_head.vue";
 import UserBody from "@/components/user_role/user_body.vue";
 </script>
 
 <template>
   <div class="user">
     <UserHead></UserHead>
-    <UserBody></UserBody>
+<!--    <UserBody></UserBody>-->
   </div>
 </template>
 

@@ -1,137 +1,206 @@
 <template>
-
+  <a-space direction="vertical" size="middle" class="site-space-compact-wrapper">
+    <a-space-compact block>
+      <a-input :style="{ width: '20%' }" default-value="0571"/>
+      <a-input :style="{ width: '30%' }" default-value="26888888"/>
+    </a-space-compact>
+    <a-space-compact block size="small">
+      <a-input :style="{ width: 'calc(100% - 200px)' }" default-value="https://ant.design"/>
+      <a-button type="primary">Submit</a-button>
+    </a-space-compact>
+    <a-space-compact block>
+      <a-input :style="{ width: 'calc(100% - 200px)' }" default-value="https://ant.design"/>
+      <a-button type="primary">Submit</a-button>
+    </a-space-compact>
+    <a-space-compact block>
+      <a-input
+          :style="{ width: 'calc(100% - 200px)' }"
+          default-value="git@github.com:ant-design/ant-design.git"
+      />
+      <a-tooltip title="copy git url">
+        <a-button>
+          <CopyOutlined/>
+        </a-button>
+      </a-tooltip>
+    </a-space-compact>
+    <a-space-compact block>
+      <a-select default-value="Zhejiang" allow-clear>
+        <a-select-option value="Zhejiang">Zhejiang</a-select-option>
+        <a-select-option value="Jiangsu">Jiangsu</a-select-option>
+      </a-select>
+      <a-input :style="{ width: '50%' }" default-value="Xihu District, Hangzhou"/>
+    </a-space-compact>
+    <a-space-compact block>
+      <a-select allow-clear mode="multiple" default-value="Zhejianggggg" :style="{ width: '50%' }">
+        <a-select-option value="Zhejianggggg">Zhejianggggg</a-select-option>
+        <a-select-option value="Jiangsu">Jiangsu</a-select-option>
+      </a-select>
+      <a-input :style="{ width: '50%' }" default-value="Xihu District, Hangzhou"/>
+    </a-space-compact>
+    <a-space-compact block>
+      <a-input-search :style="{ width: '30%' }" default-value="0571"/>
+      <a-input-search allow-clear :style="{ width: '50%' }" default-value="26888888"/>
+      <a-input-search :style="{ width: '20%' }" default-value="+1"/>
+    </a-space-compact>
+    <a-space-compact block>
+      <a-select default-value="Option1">
+        <a-select-option value="Option1">Option1</a-select-option>
+        <a-select-option value="Option2">Option2</a-select-option>
+      </a-select>
+      <a-input :style="{ width: '50%' }" default-value="input content"/>
+      <a-input-number :default-value="12"/>
+    </a-space-compact>
+    <a-space-compact block>
+      <a-input :style="{ width: '50%' }" default-value="input content"/>
+      <a-date-picker :style="{ width: '50%' }"/>
+    </a-space-compact>
+    <a-space-compact block>
+      <a-range-picker :style="{ width: '70%' }"/>
+      <a-input :style="{ width: '30%' }" default-value="input content"/>
+      <a-button type="primary">查询</a-button>
+    </a-space-compact>
+    <a-space-compact block>
+      <a-input :style="{ width: '30%' }" default-value="input content"/>
+      <a-range-picker :style="{ width: '70%' }"/>
+    </a-space-compact>
+    <a-space-compact block>
+      <div class="sfsadf"></div>
+      <a-select default-value="Option2-2">
+        <a-select-option value="Option2-1">Option2-1</a-select-option>
+        <a-select-option value="Option2-2">Option2-2</a-select-option>
+      </a-select>
+    </a-space-compact>
+    <a-space-compact block>
+      <a-select default-value="1">
+        <a-select-option value="1">Between</a-select-option>
+        <a-select-option value="2">Except</a-select-option>
+      </a-select>
+      <a-input :style="{ width: 100, textAlig: 'center' }" placeholder="Minimum"/>
+      <a-input
+          class="site-input-split"
+          :style="{
+          width: 30,
+          borderLef: 0,
+          borderRight: 0,
+          pointerEvents: 'none',
+        }"
+          placeholder="~"
+          disabled
+      />
+      <a-input
+          class="site-input-right"
+          :style="{
+          width: 100,
+          textAlig: 'center',
+        }"
+          placeholder="Maximum"
+      />
+    </a-space-compact>
+    <a-space-compact block>
+      <a-select default-value="Sign Up" :style="{ width: '30%' }">
+        <a-select-option value="Sign Up">Sign Up</a-select-option>
+        <a-select-option value="Sign In">Sign In</a-select-option>
+      </a-select>
+      <a-auto-complete
+          :style="{ width: '70%' }"
+          placeholder="Email"
+          :options="[{ value: 'text 1' }, { value: 'text 2' }]"
+      />
+    </a-space-compact>
+    <a-space-compact block>
+      <a-time-picker :style="{ width: '70%' }"/>
+      <a-cascader
+          :style="{ width: '70%' }"
+          :options="[
+          {
+            value: 'zhejiang',
+            label: 'Zhejiang',
+            children: [
+              {
+                value: 'hangzhou',
+                label: 'Hangzhou',
+                children: [
+                  {
+                    value: 'xihu',
+                    label: 'West Lake',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            value: 'jiangsu',
+            label: 'Jiangsu',
+            children: [
+              {
+                value: 'nanjing',
+                label: 'Nanjing',
+                children: [
+                  {
+                    value: 'zhonghuamen',
+                    label: 'Zhong Hua Men',
+                  },
+                ],
+              },
+            ],
+          },
+        ]"
+          placeholder="Select Address"
+      />
+    </a-space-compact>
+    <a-space-compact block>
+      <a-time-range-picker/>
+      <a-tree-select
+          show-search
+          :style="{ width: '60%' }"
+          value="leaf1"
+          :dropdown-style="{ maxHeight: 400, overflow: 'auto' }"
+          placeholder="Please select"
+          allow-clear
+          tree-default-expand-all
+          :tree-data="treeData"
+      ></a-tree-select>
+      <a-button type="primary">Submit</a-button>
+    </a-space-compact>
+  </a-space>
 </template>
-
 <script setup>
 import {ref} from 'vue';
-import {
-  AccountPasswordLoginIcon,
-  CaptchaLoginIcon,
-  ForgetPasswordIcon,
-  RegisterAccountIcon
-} from "@/components/icons/index.js";
-import AccountPasswordLogin from '@/components/login/account_password_login.vue';
-import CaptchaLogin from '@/components/login/captcha_login.vue';
-import ForgetPassword from "@/components/login/forget_password.vue";
-import Register from "@/components/login/register_account.vue";
 
-const currentTab = ref('accountPasswordLoginTab');
-const currentComponent = ref(AccountPasswordLogin);
-const animationDirection = ref('slide-fade-right');
-const isAccountPasswordActive = ref(true);
-const isAccountPasswordActiveTitle = ref('账号密码登录');
-const isInactive = ref(false);
-const isActiveIcon = ref(false); // 新增变量用于跟踪激活状态
-
-const tabs = ref([
-  {name: 'accountPasswordLoginTab', component: AccountPasswordLogin},
-  {name: 'captchaLoginTab', component: CaptchaLogin},
-  {name: 'forgetPasswordTab', component: ForgetPassword},
-  {name: 'registerAccountTab', component: Register},
+const treeData = ref([
+  {
+    title: 'parent 1',
+    value: 'parent 1',
+    children: [
+      {
+        title: 'parent 1-0',
+        value: 'parent 1-0',
+        children: [
+          {
+            title: 'my leaf',
+            value: 'leaf1',
+          },
+          {
+            title: 'your leaf',
+            value: 'leaf2',
+          },
+        ],
+      },
+      {
+        title: 'parent 1-1',
+        value: 'parent 1-1',
+      },
+    ],
+  },
 ]);
-
-
-const switchTab = (newTabName) => {
-  const tab = tabs.value.find(tab => tab.name === newTabName);
-  if (!tab) return;
-  animationDirection.value = animationDirectionGet(currentTab.value, newTabName);
-  currentTab.value = newTabName;
-  currentComponent.value = tab.component;
-  isInactive.value = true;
-  isActiveIcon.value = true; // 当点击时设为激活状态
-};
-const animationDirectionGet = (currentTabName, newTabName) => {
-  const newIndex = tabs.value.findIndex(tab => tab.name === newTabName);
-  if (tabs.value.findIndex(tab => tab.name === currentTabName) > newIndex) {
-    return 'slide-fade-left';
-  } else {
-    return 'slide-fade-right';
-  }
-};
 </script>
 
 <style scoped>
-.el-card {
-  width: 500px;
-  height: 400px;
-  background: #ffffff;
-  color: #909399;
-  font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-}
-
-.card_head {
-  width: 100%;
-  height: 50px;
-  font-weight: bold;
-  font-size: 30px;
-  color: #495b70;
-  display: flex;
-  justify-content: center;
-  justify-items: center;
-  align-items: center;
-  background: #fff1f1 linear-gradient(to right, #f50a0a, #f56c0a, #fae609, #34fd2d, #0cf6db, #8907ff, #214bfd);
-}
-
-.card_body {
-  width: 100%;
-  flex-grow: 1;
-  position: relative; /* Make it relative for the transition group */
-}
-
-.card_tab {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-}
-
-.slide-fade-right-enter-active,
-.slide-fade-right-leave-active,
-.slide-fade-left-enter-active,
-.slide-fade-left-leave-active {
-  transition: all 0.7s ease;
-}
-
-.slide-fade-right-enter-from {
-  transform: translate3d(100%, 0, 0);
-}
-
-.slide-fade-right-leave-to {
-  transform: translate3d(-100%, 0, 0);
-}
-
-.slide-fade-left-enter-from {
-  transform: translate3d(-100%, 0, 0);
-}
-
-.slide-fade-left-leave-to {
-  transform: translate3d(100%, 0, 0);
-}
-
-.card_tail {
-  width: 100%;
-  height: 50px;
-  font-size: 15px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.card_tail div {
-  width: 40px;
-  height: 40px;
-  font-size: 15px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  color: #909399;
-  border-radius: 50%;
-}
-
-.card_tail div.active {
-  background: #ebedf0;
-  border-radius: 50%;
+.sfsadf {
+  width: 100px;
+  height: 32px;
+  border-top: 1px solid #dcdfe6;
+  border-bottom: 1px solid #dcdfe6;
+  border-left: 1px solid #dcdfe6;
 }
 </style>
