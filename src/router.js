@@ -9,7 +9,7 @@ const routes = [
                 path: 'dashboard', component: () => import('@/views/Dashboard.vue'),
             },
             {
-                path: 'user/', component: () => import('@/views/user.vue')
+                path: 'user/', component: () => import('@/components/user/user.vue')
             },
             {
                 path: 'user/role', component: () => import('@/components/user_role/user_role.vue'),

@@ -18,8 +18,6 @@ service.interceptors.request.use(function (config) {
         "/xzp/sys/image/captcha/image/get",
         "/xzp/sys/swagger/json/get"
     ];
-    console.log(config)
-
     if (urls.includes(config.url)) {
         return config;
     } else {

@@ -34,7 +34,6 @@ import zhCN from 'ant-design-vue/es/locale/zh_CN';
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   background: white;
 }
 
@@ -76,6 +75,5 @@ import zhCN from 'ant-design-vue/es/locale/zh_CN';
   border-left: 1px solid var(--el-border-color);
   border-top: 1px solid var(--el-border-color);
   box-shadow: var(--el-box-shadow-lighter);
-  overflow: hidden;
 }
 </style>

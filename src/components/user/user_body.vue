@@ -1,97 +1,93 @@
 <template>
-  <div class="user_body_box" ref="userBodyRef">
-    <el-table :data="userQueryRes.users"  stripe
-              :height="tableHeight"
-              :header-cell-style="{background: '#e5eaf1', color: '#8a8b8d'}">
-      <el-table-column prop="user_id" label="用户ID" width="185" align="center"></el-table-column>
-      <el-table-column prop="nickname" label="昵称" width="200" align="center"></el-table-column>
-      <el-table-column prop="phone" label="电话号码" width="125" align="center"></el-table-column>
-      <el-table-column prop="email" label="邮箱地址" width="250" align="center"></el-table-column>
-      <el-table-column prop="avatar_key" label="头像Key" width="400" show-overflow-tooltip
-                       align="center"></el-table-column>
-      <el-table-column prop="login_status" label="登录状态" width="115" align="center">
-        <template #default="{ row }">
-          <el-icon :size="18" :color="row.login_status === true ? '#67C23A' : '#F56C6C'">
-            <SwitchButton/>
-          </el-icon>
-        </template>
-      </el-table-column>
-      <el-table-column prop="account_status" label="账号状态" width="120" align="center">
-        <template #default="scope">
-          <el-switch size="small"
-                     v-model="scope.row.account_status"
-                     @change="updateAccountStatusHandle(scope.row)"
-                     style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-          ></el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column prop="user_status" label="用户状态" width="115" align="center">
-        <template #default="{ row }">
-          <el-icon :size="18" :color="row.user_status === true ? '#67C23A' : '#F56C6C'">
-            <User/>
-          </el-icon>
-        </template>
-      </el-table-column>
-      <el-table-column prop="operator" label="操作者ID" width="185" align="center"></el-table-column>
-      <el-table-column prop="login_datetime" label="登录日期时间" width="160" align="center"></el-table-column>
-      <el-table-column prop="logout_datetime" label="登出日期时间" width="160" align="center"></el-table-column>
-      <el-table-column prop="create_datetime" label="创建日期时间" width="160" align="center"></el-table-column>
-      <el-table-column prop="update_datetime" label="更新日期时间" width="160" align="center"></el-table-column>
-      <el-table-column prop="delete_datetime" label="删除日期时间" width="160" align="center"></el-table-column>
-    </el-table>
+  <div class="user_role_body_box" ref="boxElement">
+    <a-table :columns="columns" :data-source="userQueryRes.users" bordered :pagination="false"
+             :scroll="{ y: refsd }">
+
+      <template #footer>
+        <a-pagination size="small" :total="userQueryRes.total" show-size-changer show-quick-jumper/>
+      </template>
+    </a-table>
   </div>
 </template>
 
 <script setup>
-import { User, SwitchButton } from '@element-plus/icons-vue';
+import {onMounted, onUnmounted, ref, watchEffect} from 'vue';
 import eventBus from '@/utils/event_bus.js';
-import { ref, onMounted, computed, watchEffect } from 'vue';
-import { userAccountStatusUpdate } from '@/apis/user.js';
 
-const userQueryRes = ref({ total: 0, users: [] });
+const columns = [
+  {title: '操作者ID', dataIndex: 'operator_id', key: 'operator_id', width: 100},
+  {title: '创建日期时间', dataIndex: 'create_datetime', key: 'create_datetime', width: 100},
+  {title: '更新日期时间', dataIndex: 'update_datetime', key: 'update_datetime', width: 100}
+];
 
-const userBodyRef = ref(null);
-const tableHeight = computed(() => {
-  return userBodyRef.value ? userBodyRef.value.clientHeight - 2 : 'auto';
-});
+const userQueryRes = ref({total: 0, users: []});
 
-const adjustTableHeight = () => {
-  if (userBodyRef.value) {
-    userBodyRef.value.style.height = `${userBodyRef.value.offsetHeight - 2}px`;
-  }
-};
-
-const userQueryResHandel = () => {
+const userQueryResHandle = () => {
   const handler = (msg) => {
     userQueryRes.value = msg.data;
-    console.log(userQueryRes.value)
   };
   eventBus.on('users', handler);
 };
+userQueryResHandle();
 
-userQueryResHandel();
+// 初始化窗口高度
+const windowHeight = ref(window.innerHeight);
 
-// 在组件挂载后调用 adjustTableHeight
-onMounted(() => {
-  adjustTableHeight();
-});
+// 计算table滚动区域的高度
+const refsd = ref(windowHeight.value - 210); // 初始值
 
-// 监听元素大小变化时调用 adjustTableHeight
-watchEffect(() => {
-  adjustTableHeight();
-});
-
-const updateAccountStatusHandle = async (row) => {
-  await userAccountStatusUpdate({ user_id: row.user_id, type: row.account_status });
+// 监听窗口高度变化
+const handleResize = () => {
+  windowHeight.value = window.innerHeight;
+  refsd.value = windowHeight.value - 210; // 更新table滚动区域的高度
+  console.log(`${windowHeight.value}px, ${refsd.value}`);
 };
+
+// 在组件挂载后开始监听
+onMounted(() => {
+  window.addEventListener('resize', handleResize);
+  // 立即执行一次，确保初始值正确
+  handleResize();
+});
+
+// 组件卸载前停止监听
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
+});
 </script>
 
-
 <style scoped>
-.user_body_box {
+.user_role_body_box {
   width: 100%;
-  margin-top: 5px;
   display: flex;
   flex-grow: 1;
+}
+
+:deep(.ant-table-header) {
+  line-height: 30px;
+  text-align: center;
+}
+
+:deep(.ant-table-thead) {
+  height: 30px;
+  text-align: center;
+}
+
+:deep(.ant-table-cell) {
+  padding: 5px !important;
+  text-align: center;
+}
+
+:deep(.ant-table-thead > tr > th) {
+  text-align: center;
+  color: #909399;
+  font-family: "微软雅黑 Light", sans-serif;
+}
+
+:deep(.ant-table-footer) {
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
 }
 </style>

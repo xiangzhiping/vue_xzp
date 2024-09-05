@@ -1,17 +1,17 @@
 <script setup>
-import UserHead from "@/components/user_role/user_role_head.vue";
-import UserBody from "@/components/user_role/user_body.vue";
+import UserRoleHead from "@/components/user_role/user_role_head.vue";
+import UserRoleBody from "@/components/user_role/user_role_body.vue";
 </script>
 
 <template>
-  <div class="user">
-    <UserHead></UserHead>
-<!--    <UserBody></UserBody>-->
+  <div class="user_role">
+    <UserRoleHead></UserRoleHead>
+    <UserRoleBody></UserRoleBody>
   </div>
 </template>
 
 <style scoped>
-.user{
+.user_role{
   width: 100%;
   height: 100%;
   display: flex;
