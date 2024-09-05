@@ -1,6 +1,6 @@
 <template>
-  <div class="user_role_body_box" ref="userRoleBodyRef">
-    <a-table :columns="columns" :data-source="userRoles.roles" bordered :pagination="false" :scroll="{ y: 1000 }">
+  <div class="user_role_body" ref="userRoleBodyRef">
+    <a-table :columns="columns" :data-source="userRoles.roles" bordered :pagination="false" :scroll="{ y: 300 }">
 <!--      <template #bodyCell="{ column, record }">-->
 <!--        <template v-if="column.key === 'role_level'">-->
 <!--          <a-tag :color="getRoleInfo(record.role_level).color">-->
@@ -100,12 +100,11 @@ const dynamicStyles = {
 </script>
 
 <style scoped>
-.user_role_body_box {
+.user_role_body {
   width: 100%;
-  border-top: 1px solid var(--el-border-color);
+  margin-top: 5px;
   display: flex;
   flex-grow: 1;
-  background: #13ce66;
 }
 
 

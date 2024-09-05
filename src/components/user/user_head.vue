@@ -1,388 +1,244 @@
 <template>
-  <el-form>
-    <div class="user_head">
-      <div class="date_picker_form1">
-        <div class="date_picker_query">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Clock/>
-              </el-icon>
-            </div>
-            <el-date-picker v-model="userQueryForm.login_datetime" type="datetimerange"
-                            start-placeholder="登录开始日期时间" end-placeholder="登录结束日期时间" class="zcsdsda"/>
-          </el-form-item>
-        </div>
-        <div class="date_picker_query">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Clock/>
-              </el-icon>
-            </div>
-            <el-date-picker v-model="userQueryForm.logout_datetime" type="datetimerange" range-separator="-"
-                            start-placeholder="登出开始日期时间" end-placeholder="登出结束日期时间"/>
-          </el-form-item>
-        </div>
+  <div class="user_role_head">
+    <a-space-compact>
+      <div class="icon_box">
+        <FieldTimeOutlined/>
       </div>
-      <div class="date_picker_form1">
-        <div class="date_picker_query">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Clock/>
-              </el-icon>
-            </div>
-            <el-date-picker v-model="userQueryForm.create_datetime" type="datetimerange" range-separator="-"
-                            start-placeholder="创建开始日期时间" end-placeholder="创建结束日期时间" class=""/>
-          </el-form-item>
-        </div>
-        <div class="date_picker_query">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Clock/>
-              </el-icon>
-            </div>
-            <el-date-picker v-model="userQueryForm.update_datetime" type="datetimerange" range-separator="-"
-                            start-placeholder="更新开始日期时间" end-placeholder="更新结束日期时间"/>
-          </el-form-item>
-        </div>
+      <a-range-picker v-model="userForm.create_datetime" show-time
+                      :placeholder="['创建开始日期时间', '创建结束日期时间']"/>
+    </a-space-compact>
+    <a-space-compact>
+      <div class="icon_box">
+        <FieldTimeOutlined/>
       </div>
-      <div class="date_picker_input_form">
-        <div class="date_picker_query">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Clock/>
-              </el-icon>
-            </div>
-            <el-date-picker v-model="userQueryForm.delete_datetime" type="datetimerange" range-separator="-"
-                            start-placeholder="删除开始日期时间" end-placeholder="删除结束日期时间" class=""/>
-          </el-form-item>
-        </div>
-        <div class="input_query">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Phone/>
-              </el-icon>
-            </div>
-            <el-input v-model="userQueryForm.phone" placeholder="手机号码（支持手机号起始位关键字匹配）" clearable/>
-          </el-form-item>
-        </div>
+      <a-range-picker v-model="userForm.update_datetime" show-time
+                      :placeholder="['更新开始日期时间', '更新结束日期时间']"/>
+    </a-space-compact>
+    <a-space-compact>
+      <div class="icon_box">
+        <FieldTimeOutlined/>
       </div>
-      <div class="input_select_form">
-        <div class="input_query">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Message/>
-              </el-icon>
-            </div>
-            <el-input v-model="userQueryForm.email" placeholder="邮箱地址（支持邮箱号起始位关键字匹配）" clearable/>
-          </el-form-item>
-        </div>
-        <div class="select_query">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <SwitchButton/>
-              </el-icon>
-            </div>
-            <el-select v-model="userQueryForm.login_status" placeholder="登录状态">
-              <el-option
-                  v-for="item in loginStatusOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <Open/>
-              </el-icon>
-            </div>
-            <el-select v-model="userQueryForm.account_status" placeholder="账号状态">
-              <el-option
-                  v-for="item in accountStatusOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-        </div>
+      <a-range-picker v-model="userForm.create_datetime" show-time
+                      :placeholder="['登录开始日期时间', '登录结束日期时间']"/>
+    </a-space-compact>
+    <a-space-compact>
+      <div class="icon_box">
+        <FieldTimeOutlined/>
       </div>
-      <div class="pagination_select_button_form">
-        <div class="pagination_query">
-          <el-form-item>
-            <el-pagination
-                v-model:page-size="userQueryForm.number_pieces"
-                :page-sizes="[250, 500, 1000]"
-                size="default"
-                :disabled="false"
-                :background="true"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="userRes.total"
-                @size-change="numberPiecesChangeHandel"
-                @current-change="numberPagesChangeHandel"
-            />
-          </el-form-item>
-        </div>
-        <div class="button_query" style="display: flex; margin-top: 7px">
-          <el-form-item>
-            <div class="form_head">
-              <el-icon color="#707070" size="20">
-                <User/>
-              </el-icon>
-            </div>
-            <el-select v-model="userQueryForm.user_status" placeholder="用户状态">
-              <el-option
-                  v-for="item in userStatusOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item style="margin-left: 10px">
-            <el-button plain type="info" @click="userQueryFormRefreshHandel">
-              <el-icon size="20">
-                <Refresh/>
-              </el-icon>
-              <span>重 置</span>
-            </el-button>
-          </el-form-item>
-          <el-form-item style="margin-left: 10px">
-            <el-button plain type="primary" @click="userQueryHandel">
-              <el-icon size="20">
-                <Search/>
-              </el-icon>
-              <span>查 询</span>
-            </el-button>
-          </el-form-item>
-        </div>
+      <a-range-picker v-model="userForm.update_datetime" show-time
+                      :placeholder="['登出开始日期时间', '登出结束日期时间']"/>
+    </a-space-compact>
+    <a-space-compact>
+      <div class="icon_box">
+        <CaretDownOutlined/>
       </div>
-    </div>
-  </el-form>
+      <a-select
+          :options="userRoleMenu.role_levels"
+          v-model:value="userForm.role_level"
+          placeholder="角色级别" allow-clear>
+      </a-select>
+    </a-space-compact>
+    <a-space-compact>
+      <div class="icon_box">
+        <CaretDownOutlined/>
+      </div>
+      <a-select
+          :options="userRoleMenu.role_levels"
+          v-model:value="userForm.role_level"
+          placeholder="角色级别" allow-clear>
+      </a-select>
+    </a-space-compact>
+    <a-space-compact>
+      <div class="icon_box">
+        <ItalicOutlined/>
+      </div>
+      <a-input v-model="userForm.role_name" placeholder="角色名称（支持起始关键字匹配）" allow-clear/>
+    </a-space-compact>
+    <a-space-compact>
+      <div class="icon_box">
+        <ItalicOutlined/>
+      </div>
+      <a-input v-model="userForm.role_name" placeholder="角色名称（支持起始关键字匹配）" allow-clear/>
+    </a-space-compact>
+    <a-space-compact>
+      <a-button @click="userFormRefreshHandel">
+        <ReloadOutlined/>
+        重 置
+      </a-button>
+      <a-button @click="userQueryHandel">
+        <SearchOutlined/>
+        查 询
+      </a-button>
+    </a-space-compact>
+  </div>
 </template>
 
 <script setup>
 import {reactive, ref} from 'vue'
-import {Refresh, Open, User, SwitchButton, Phone, Message, Search, Clock} from "@element-plus/icons-vue";
 import {userQuery} from '@/apis/user.js';
-import eventBus from '@/utils/event_bus.js';
+import event_bus from '@/utils/event_bus.js';
+import {
+  ItalicOutlined,
+  FieldTimeOutlined,
+  ReloadOutlined,
+  SearchOutlined,
+  CaretDownOutlined,
+  PlusOutlined
+} from '@ant-design/icons-vue';
+import RoleCreateDialogs from '@/components/user_role/user_role_dialogs/role_create_dialogs.vue'
 
-const userQueryForm = reactive({
+const userForm = reactive({
   phone: null,
   email: null,
-  login_status: null,
   account_status: null,
-  user_status: null,
+  login_status: null,
   login_datetime: null,
   logout_datetime: null,
   create_datetime: null,
   update_datetime: null,
-  delete_datetime: null,
   number_pages: 1,
-  number_pieces: 500,
+  number_pieces: 250,
 })
+const userRoleMenu = ref({role_levels: [], api_tabs: []})
 
-const userRes = ref({total: 0, users: []});
+// const userRoleMenuQueryHandel = async () => {
+//   const res = await userRoleMenuQuery()
+//   if (res.code === 200) {
+//     userRoleMenu.value = res.data;
+//   }
+//   event_bus.emit('user_role_menu', res.data);
+// }
 
+const result = ref({total: 0, roles: []});
+
+const formatDateTimeRange = (datetimeArr) => {
+  if (datetimeArr) {
+    const formattedDates = datetimeArr.map(date => {
+      return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
+    });
+    return formattedDates.join(', ');
+  }
+}
+const userFormRefreshHandel = async () => {
+  userForm.phone = null;
+  userForm.email = null;
+  userForm.account_status = null;
+  userForm.login_status = null;
+  userForm.login_datetime = null;
+  userForm.logout_datetime = null;
+  userForm.create_datetime = null;
+  userForm.update_datetime = null;
+  userForm.number_pages = 1;
+  userForm.number_pieces = 250;
+}
 
 const userQueryHandel = async () => {
-  const res = await userQuery(userQueryForm)
-  userRes.value.total = res.data.total;
-  eventBus.emit('users', res);
+  // await userRoleMenuQueryHandel()
+  userForm.login_datetime = formatDateTimeRange(userForm.login_datetime);
+  userForm.logout_datetime = formatDateTimeRange(userForm.logout_datetime);
+  userForm.create_datetime = formatDateTimeRange(userForm.create_datetime);
+  userForm.update_datetime = formatDateTimeRange(userForm.update_datetime);
+  const res = await userQuery(userForm)
+  if (res.code === 200 || res.code === 204) {
+    result.value.total = res.data.total;
+    event_bus.emit('users', res);
+  }
 }
 
 userQueryHandel()
-const userQueryFormRefreshHandel = async () => {
-  userQueryForm.phone = null;
-  userQueryForm.email = null;
-  userQueryForm.login_status = null;
-  userQueryForm.account_status = null;
-  userQueryForm.user_status = null;
-  userQueryForm.login_datetime = null;
-  userQueryForm.logout_datetime = null;
-  userQueryForm.create_datetime = null;
-  userQueryForm.update_datetime = null;
-  userQueryForm.delete_datetime = null;
-  userQueryForm.number_pages = 1;
-  userQueryForm.number_pieces = 500;
-}
 
 const numberPagesChangeHandel = (val) => {
-  userQueryForm.number_pages = val;
+  userForm.number_pages = val;
 };
 
 const numberPiecesChangeHandel = (val) => {
-  userQueryForm.number_pieces = val;
+  userForm.number_pieces = val;
 };
-
-const loginStatusOptions = reactive([
-  {
-    value: null,
-    label: '全部',
-  },
-  {
-    value: true,
-    label: '在线',
-  },
-  {
-    value: false,
-    label: '离线',
-  }
-])
-const accountStatusOptions = reactive([
-  {
-    value: null,
-    label: '全部',
-  },
-  {
-    value: true,
-    label: '启用',
-  },
-  {
-    value: false,
-    label: '禁用',
-  }
-])
-const userStatusOptions = reactive([
-  {
-    value: null,
-    label: '全部',
-  },
-  {
-    value: true,
-    label: '有效',
-  },
-  {
-    value: false,
-    label: '无效',
-  }
-])
 </script>
 
 <style scoped>
-.user_head {
+.user_role_head {
   width: 100%;
-  height: auto;
   display: flex;
   justify-content: left;
   flex-wrap: wrap;
 }
 
-.button_query span {
-  font-size: 18px;
-}
-
-.date_picker_form1, .date_picker_input_form, .input_select_form {
-  width: 320px;
+.ant-space-compact {
   margin-top: 5px;
+  width: 355px;
 }
 
-.pagination_select_button_form {
+.ant-space-compact:nth-child(5),
+.ant-space-compact:nth-child(6){
   margin-top: 5px;
-  width: 550px;
+  width: 215px;
 }
 
-.date_picker_query {
-  width: 310px;
-}
-
-
-.date_picker_query:nth-child(2) {
+.ant-space-compact:nth-child(7),
+.ant-space-compact:nth-child(8){
   margin-top: 5px;
+  width: 285px;
 }
 
-.input_query:nth-child(2) {
-  margin-top: 5px;
-}
-
-.el-input {
-  width: 279px;
-}
-
-.el-button {
+.icon_box {
+  width: 32px;
   height: 32px;
-  margin-top: -1px;
+  border-radius: 3px 0 0 3px;
+  border-bottom: 1px solid #d9d9d9;
+  border-left: 1px solid #d9d9d9;
+  border-top: 1px solid #d9d9d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #909399;
 }
 
-.select_query {
-  margin-top: 5px;
+.ant-input-affix-wrapper {
+  border-radius: 3px;
+  width: 240px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.ant-picker {
   width: 310px;
-  display: flex;
-  justify-content: space-between;
+  border-radius: 4px;
 }
 
-.el-select {
-  width: 120px;
-}
-
-.el-form-item {
-  margin-bottom: 0;
-  display: flex;
-  justify-content: left;
-}
-
-:deep(.el-pagination) {
-  height: 30px;
-}
-
-
-:deep(.el-range-separator) {
+:deep(.ant-picker-suffix) {
   display: none;
 }
 
-:deep(.el-date-editor) {
-  --el-date-editor-datetimerange-width: 110px;
-  display: flex;
-  justify-content: left;
+:deep(.ant-select-single .ant-select-selector) {
+  width: 170px;
+  border-radius: 3px;
 }
 
-:deep(.el-date-editor .el-range__close-icon) {
-  display: none;
+.ant-space-compact:nth-child(9),
+.ant-space-compact:nth-child(10),
+.ant-space-compact:nth-child(10) {
+  margin-top: 5px;
+  width: 105px;
 }
 
-
-:deep(.el-date-editor .el-range-input) {
-  margin: 20px 20px 20px -7px;
-  width: 130px;
-}
-
-
-:deep(.el-date-editor .el-input__icon.el-range__icon) {
-  display: none;
-}
-
-
-::v-deep .el-input__wrapper {
-  border-radius: 0 4px 4px 0;
-}
-
-::v-deep .el-select__wrapper, ::v-deep .el-input {
-  border-radius: 0 4px 4px 0;
-}
-
-
-.form_head {
-  width: 30px;
-  height: 30px;
-  border-top: 1px solid var(--el-border-color);
-  border-left: 1px solid var(--el-border-color);
-  border-bottom: 1px solid var(--el-border-color);
-  border-right: 0;
-  background: #f5f7fa;
-  border-radius: 4px 0 0 4px;
+.ant-btn {
+  font-size: 16px;
+  border-radius: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #909399;
 }
 
+.ant-btn:nth-child(1):hover {
+  color: #909399;
+  border-color: #909399;
+}
 
+.ant-btn:nth-child(2):hover {
+  color: #409EFF;
+  border-color: #409EFF;
+}
 </style>
