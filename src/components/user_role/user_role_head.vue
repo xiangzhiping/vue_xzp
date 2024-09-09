@@ -2,27 +2,27 @@
   <div class="user_role_head">
     <a-space-compact>
       <div class="icon_box">
-        <FieldTimeOutlined/>
+        <FieldTimeOutlined />
       </div>
       <a-range-picker v-model="userRoleForm.create_datetime" show-time
-                      :placeholder="['创建开始日期时间', '创建结束日期时间']"/>
+                      :placeholder="['创建开始日期时间', '创建结束日期时间']" />
     </a-space-compact>
     <a-space-compact>
       <div class="icon_box">
-        <FieldTimeOutlined/>
+        <FieldTimeOutlined />
       </div>
       <a-range-picker v-model="userRoleForm.update_datetime" show-time
-                      :placeholder="['更新开始日期时间', '更新结束日期时间']"/>
+                      :placeholder="['更新开始日期时间', '更新结束日期时间']" />
     </a-space-compact>
     <a-space-compact>
       <div class="icon_box">
-        <ItalicOutlined/>
+        <ItalicOutlined />
       </div>
-      <a-input v-model="userRoleForm.role_name" placeholder="角色名称（支持起始关键字匹配）" allow-clear/>
+      <a-input v-model="userRoleForm.role_name" placeholder="角色名称（支持起始关键字匹配）" allow-clear />
     </a-space-compact>
     <a-space-compact>
       <div class="icon_box">
-        <CaretDownOutlined/>
+        <CaretDownOutlined />
       </div>
       <a-select
           :options="userRoleMenu.role_levels"
@@ -32,25 +32,26 @@
     </a-space-compact>
     <a-space-compact>
       <a-button @click="userRoleFormRefreshHandel">
-        <ReloadOutlined/>
+        <ReloadOutlined />
         重 置
       </a-button>
       <a-button @click="userRoleQueryHandel">
-        <SearchOutlined/>
+        <SearchOutlined />
         查 询
       </a-button>
-      <a-button @click="userRoleCreateDialogHandel">
-        <PlusOutlined/>
+      <a-button @click="userRoleCreateModalHandel">
+        <PlusOutlined />
         新 增
       </a-button>
     </a-space-compact>
+    <UserRoleCreate :visible="isUserRoleCreateModalVisible" :userRoleMenu="userRoleMenu" @close="userRoleCreateModalHandel"/>
   </div>
 </template>
 
 <script setup>
-import {reactive, ref} from 'vue'
-import {userRoleQuery, userRoleMenuQuery} from '@/apis/user_role.js';
-import event_bus from '@/utils/event_bus.js';
+import { reactive, ref } from 'vue'
+import { userRoleQuery, userRoleMenuQuery } from '@/apis/user_role.js'
+import event_bus from '@/utils/event_bus.js'
 import {
   ItalicOutlined,
   FieldTimeOutlined,
@@ -58,8 +59,8 @@ import {
   SearchOutlined,
   CaretDownOutlined,
   PlusOutlined
-} from '@ant-design/icons-vue';
-import RoleCreateDialogs from '@/components/user_role/user_role_dialogs/role_create_dialogs.vue'
+} from '@ant-design/icons-vue'
+import UserRoleCreate from '@/components/user_role/user_role_create.vue' // 确保路径正确
 
 const userRoleForm = reactive({
   role_name: null,
@@ -70,68 +71,70 @@ const userRoleForm = reactive({
   number_pages: 1,
   number_pieces: 250,
 })
-const userRoleMenu = ref({role_levels: [], api_tabs: []})
+
+const userRoleMenu = ref({ role_levels: [], api_tabs: [] })
 
 const userRoleMenuQueryHandel = async () => {
   const res = await userRoleMenuQuery()
   if (res.code === 200) {
-    userRoleMenu.value = res.data;
+    userRoleMenu.value = res.data
   }
-  event_bus.emit('user_role_menu', res.data);
+  event_bus.emit('user_role_menu', res.data)
 }
 
-const result = ref({total: 0, roles: []});
+const result = ref({ total: 0, roles: [] })
 
 const formatDateTimeRange = (datetimeArr) => {
   if (datetimeArr) {
     const formattedDates = datetimeArr.map(date => {
-      return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
-    });
-    return formattedDates.join(', ');
+      return new Date(date).toISOString().slice(0, 19).replace('T', ' ')
+    })
+    return formattedDates.join(', ')
   }
+  return null
 }
+
 const userRoleFormRefreshHandel = async () => {
-  userRoleForm.role_name = null;
-  userRoleForm.role_level = null;
-  userRoleForm.operator_id = null;
-  userRoleForm.role_status = null;
-  userRoleForm.create_datetime = null;
-  userRoleForm.update_datetime = null;
-  userRoleForm.delete_datetime = null;
-  userRoleForm.number_pages = 1;
-  userRoleForm.number_pieces = 250;
+  userRoleForm.role_name = null
+  userRoleForm.role_level = null
+  userRoleForm.operator_id = null
+  userRoleForm.role_status = null
+  userRoleForm.create_datetime = null
+  userRoleForm.update_datetime = null
+  userRoleForm.delete_datetime = null
+  userRoleForm.number_pages = 1
+  userRoleForm.number_pieces = 250
 }
+
+const userRolePaginationHandel = () => {
+  const handler = (msg) => {
+    userRoleForm.number_pages = msg.pages
+    userRoleForm.number_pieces = msg.pieces
+  }
+  event_bus.on('user_role_pagination', handler)
+}
+userRolePaginationHandel()
 
 const userRoleQueryHandel = async () => {
   await userRoleMenuQueryHandel()
-  userRoleForm.create_datetime = formatDateTimeRange(userRoleForm.create_datetime);
-  userRoleForm.update_datetime = formatDateTimeRange(userRoleForm.update_datetime);
-  console.log(userRoleForm)
+  userRoleForm.create_datetime = formatDateTimeRange(userRoleForm.create_datetime)
+  userRoleForm.update_datetime = formatDateTimeRange(userRoleForm.update_datetime)
   const res = await userRoleQuery(userRoleForm)
   if (res.code === 200 || res.code === 204) {
-    result.value.total = res.data.total;
-    event_bus.emit('roles', res);
+    result.value.total = res.data.total
+    event_bus.emit('roles', res)
   }
 }
 
 userRoleQueryHandel()
 
-const numberPagesChangeHandel = (val) => {
-  userRoleForm.number_pages = val;
-};
+const isUserRoleCreateModalVisible = ref(false)
 
-const numberPiecesChangeHandel = (val) => {
-  userRoleForm.number_pieces = val;
-};
-
-const isRoleCreateDialogVisible = ref(false);
-
-
-const userRoleCreateDialogHandel = async () => {
-  isRoleCreateDialogVisible.value = !isRoleCreateDialogVisible.value;
-  event_bus.emit('isRoleCreateDialogVisible', isRoleCreateDialogVisible);
+const userRoleCreateModalHandel = async () => {
+  isUserRoleCreateModalVisible.value = !isUserRoleCreateModalVisible.value
 }
 </script>
+
 
 <style scoped>
 .user_role_head {
@@ -142,17 +145,14 @@ const userRoleCreateDialogHandel = async () => {
 }
 
 .ant-space-compact {
-  margin-top: 5px;
   width: 355px;
 }
 
 .ant-space-compact:nth-child(3) {
-  margin-top: 5px;
   width: 285px;
 }
 
 .ant-space-compact:nth-child(4) {
-  margin-top: 5px;
   width: 195px;
 }
 
@@ -194,7 +194,6 @@ const userRoleCreateDialogHandel = async () => {
 .ant-space-compact:nth-child(5),
 .ant-space-compact:nth-child(6),
 .ant-space-compact:nth-child(7) {
-  margin-top: 5px;
   width: 105px;
 }
 
@@ -213,12 +212,12 @@ const userRoleCreateDialogHandel = async () => {
 }
 
 .ant-btn:nth-child(2):hover {
-  color: #409EFF;
-  border-color: #409EFF;
+  color: #1677ff;
+  border-color: #1677ff;
 }
 
 .ant-btn:nth-child(3):hover {
-  color: #67C23A;
-  border-color: #67C23A;
+  color: #13ce66;
+  border-color: #13ce66;
 }
 </style>

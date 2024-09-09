@@ -1,51 +1,67 @@
 <template>
   <div class="user_role_body" ref="userRoleBodyRef">
-    <a-table :columns="columns" :data-source="userRoles.roles" bordered :pagination="false" :scroll="{ y: 300 }">
-<!--      <template #bodyCell="{ column, record }">-->
-<!--        <template v-if="column.key === 'role_level'">-->
-<!--          <a-tag :color="getRoleInfo(record.role_level).color">-->
-<!--            {{ getRoleInfo(record.role_level).text }}-->
-<!--          </a-tag>-->
-<!--        </template>-->
-<!--        <template v-else-if="column.key === 'api_tabs'">-->
-<!--        <span>-->
-<!--          <a-tag v-for="tab in JSON.parse(record.api_tabs)" :color="getRoleInfo(record.role_level).color">-->
-<!--            {{ tab.key }}-->
-<!--          </a-tag>-->
-<!--        </span>-->
-<!--        </template>-->
-<!--      </template>-->
-<!--      <template #footer>-->
-<!--        <a-pagination size="small" :total="userRoles.total" show-size-changer show-quick-jumper/>-->
-<!--      </template>-->
+    <a-table :columns="columns" :data-source="userRoles.roles" bordered :pagination="false"
+             :scroll="{ y: 1000 }">
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'role_level'">
+          <a-tag :color="getRoleInfo(record.role_level).color">
+            {{ getRoleInfo(record.role_level).text }}
+          </a-tag>
+        </template>
+        <template v-else-if="column.key === 'api_tabs'">
+        <span>
+          <a-tag v-for="tab in JSON.parse(record.api_tabs)" :color="getRoleInfo(record.role_level).color">
+            {{ tab.key }}
+          </a-tag>
+        </span>
+        </template>
+      </template>
+      <template #footer>
+        <a-pagination size="small" v-model:current="userRolePagination.pages"
+                      v-model:page-size="userRolePagination.pieces" :total="userRoles.total"
+                      show-size-changer show-quick-jumper :show-total="total => `共 ${total} 条`"/>
+      </template>
     </a-table>
   </div>
 </template>
 
 <script setup>
 import eventBus from '@/utils/event_bus.js';
-import {ref, computed, onMounted, watchEffect} from 'vue';
+import {ref, computed, onMounted, reactive, onUnmounted, watch} from 'vue';
 import {userRoleDelete} from '@/apis/user_role.js';
+import event_bus from "@/utils/event_bus.js";
+
+const windowHeight = ref(window.innerHeight);
+const tableHeight = ref(windowHeight.value - 98);
+
+const windowHeightResizeHandle = () => {
+  windowHeight.value = window.innerHeight;
+  tableHeight.value = windowHeight.value - 98;
+  console.log(`${windowHeight.value}px, ${tableHeight.value}`);
+};
+
+onMounted(() => {
+  window.addEventListener('resize', windowHeightResizeHandle);
+  windowHeightResizeHandle();
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', windowHeightResizeHandle);
+});
 
 const columns = [
   {title: '角色ID', dataIndex: 'role_id', key: 'role_id', width: 50},
   {title: '角色名称', dataIndex: 'role_name', key: 'role_name', width: 200},
   {title: '角色级别', dataIndex: 'role_level', key: 'role_level', width: 100},
   {title: '接口标签', dataIndex: 'api_tabs', key: 'api_tabs', width: 400},
-  {title: '操作者ID', dataIndex: 'operator_id', key: 'operator_id', width: 50},
+  {title: '操作者ID', dataIndex: 'operator_id', key: 'operator_id', width: 100},
   {title: '创建日期时间', dataIndex: 'create_datetime', key: 'create_datetime', width: 100},
   {title: '更新日期时间', dataIndex: 'update_datetime', key: 'update_datetime', width: 100}
 ];
 const userRoles = ref({total: 0, roles: []});
 const userRoleBodyRef = ref(null);
-const tableHeight = computed(() => userRoleBodyRef.value ? userRoleBodyRef.value.clientHeight - 2 : 'auto');
 const userRoleDeleteLoadings = ref([]);
 
-const adjustTableHeight = () => {
-  if (userRoleBodyRef.value) {
-    userRoleBodyRef.value.style.height = `${userRoleBodyRef.value.offsetHeight - 2}px`;
-  }
-};
 
 const getRoleInfo = computed(() => (level) => {
   let color, text;
@@ -71,20 +87,12 @@ const userRoleQueryResHandel = () => {
   };
   eventBus.on('roles', handler);
 };
+userRoleQueryResHandel();
 
-onMounted(() => {
-  userRoleQueryResHandel();
-  adjustTableHeight();
-});
-
-watchEffect(() => {
-  adjustTableHeight()
-});
 
 const userRoleDeleteHandel = async (index, row) => {
   userRoleDeleteLoadings.value[index] = true;
   const res = await userRoleDelete({role_id: row.role_id});
-  console.log(res)
   if (res.code === 200) {
     userRoleQueryRes.value.roles.splice(index, 1);
     userRoleDeleteLoadings.value[index] = false;
@@ -92,11 +100,10 @@ const userRoleDeleteHandel = async (index, row) => {
   userRoleDeleteLoadings.value[index] = false;
 };
 
-const height = ref(200); // 初始高度
-
-const dynamicStyles = {
-  '--element-height': `${height.value}px`,
-};
+const userRolePagination = reactive({pages: 1, pieces: 100});
+watch(userRolePagination, (newVal, oldVal) => {
+  eventBus.emit('user_role_pagination', newVal)
+}, {deep: true});
 </script>
 
 <style scoped>
@@ -106,8 +113,6 @@ const dynamicStyles = {
   display: flex;
   flex-grow: 1;
 }
-
-
 
 :deep(.ant-table-header) {
   line-height: 30px;

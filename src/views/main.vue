@@ -67,13 +67,11 @@ import zhCN from 'ant-design-vue/es/locale/zh_CN';
 
 .main_box {
   height: calc(100% - 6px);
-  width: calc(100% - 57px);
+  width: calc(100% - 56px);
   border-radius: 4px;
   margin-top: 5px;
   display: flex;
   justify-content: center;
-  border-left: 1px solid var(--el-border-color);
-  border-top: 1px solid var(--el-border-color);
   box-shadow: var(--el-box-shadow-lighter);
 }
 </style>

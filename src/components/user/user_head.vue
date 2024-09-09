@@ -4,28 +4,28 @@
       <div class="icon_box">
         <FieldTimeOutlined/>
       </div>
-      <a-range-picker v-model="userForm.create_datetime" show-time
+      <a-range-picker v-model:value="userForm.create_datetime" show-time
                       :placeholder="['创建开始日期时间', '创建结束日期时间']"/>
     </a-space-compact>
     <a-space-compact>
       <div class="icon_box">
         <FieldTimeOutlined/>
       </div>
-      <a-range-picker v-model="userForm.update_datetime" show-time
+      <a-range-picker v-model:value="userForm.update_datetime" show-time
                       :placeholder="['更新开始日期时间', '更新结束日期时间']"/>
     </a-space-compact>
     <a-space-compact>
       <div class="icon_box">
         <FieldTimeOutlined/>
       </div>
-      <a-range-picker v-model="userForm.create_datetime" show-time
+      <a-range-picker v-model:value="userForm.login_datetime" show-time
                       :placeholder="['登录开始日期时间', '登录结束日期时间']"/>
     </a-space-compact>
     <a-space-compact>
       <div class="icon_box">
         <FieldTimeOutlined/>
       </div>
-      <a-range-picker v-model="userForm.update_datetime" show-time
+      <a-range-picker v-model:value="userForm.logout_datetime" show-time
                       :placeholder="['登出开始日期时间', '登出结束日期时间']"/>
     </a-space-compact>
     <a-space-compact>
@@ -33,9 +33,9 @@
         <CaretDownOutlined/>
       </div>
       <a-select
-          :options="userRoleMenu.role_levels"
-          v-model:value="userForm.role_level"
-          placeholder="角色级别" allow-clear>
+          :options="userMenu.login_states"
+          v-model:value="userForm.login_status"
+          placeholder="登录状态" allow-clear>
       </a-select>
     </a-space-compact>
     <a-space-compact>
@@ -43,22 +43,22 @@
         <CaretDownOutlined/>
       </div>
       <a-select
-          :options="userRoleMenu.role_levels"
-          v-model:value="userForm.role_level"
-          placeholder="角色级别" allow-clear>
+          :options="userMenu.account_states"
+          v-model:value="userForm.account_status"
+          placeholder="账号状态" allow-clear>
       </a-select>
     </a-space-compact>
     <a-space-compact>
       <div class="icon_box">
-        <ItalicOutlined/>
+        <PhoneFilled/>
       </div>
-      <a-input v-model="userForm.role_name" placeholder="角色名称（支持起始关键字匹配）" allow-clear/>
+      <a-input v-model:value="userForm.phone" placeholder="手机号码（支持起始关键字匹配）" allow-clear/>
     </a-space-compact>
     <a-space-compact>
       <div class="icon_box">
-        <ItalicOutlined/>
+        <MailOutlined/>
       </div>
-      <a-input v-model="userForm.role_name" placeholder="角色名称（支持起始关键字匹配）" allow-clear/>
+      <a-input v-model:value="userForm.email" placeholder="邮箱地址（支持起始关键字匹配）" allow-clear/>
     </a-space-compact>
     <a-space-compact>
       <a-button @click="userFormRefreshHandel">
@@ -75,17 +75,16 @@
 
 <script setup>
 import {reactive, ref} from 'vue'
-import {userQuery} from '@/apis/user.js';
+import {userMenuQuery, userQuery} from '@/apis/user.js';
 import event_bus from '@/utils/event_bus.js';
 import {
-  ItalicOutlined,
   FieldTimeOutlined,
   ReloadOutlined,
   SearchOutlined,
   CaretDownOutlined,
-  PlusOutlined
+  PhoneFilled,
+  MailOutlined
 } from '@ant-design/icons-vue';
-import RoleCreateDialogs from '@/components/user_role/user_role_dialogs/role_create_dialogs.vue'
 
 const userForm = reactive({
   phone: null,
@@ -97,17 +96,17 @@ const userForm = reactive({
   create_datetime: null,
   update_datetime: null,
   number_pages: 1,
-  number_pieces: 250,
+  number_pieces: 100,
 })
-const userRoleMenu = ref({role_levels: [], api_tabs: []})
+const userMenu = ref({login_states: [], account_states: []})
 
-// const userRoleMenuQueryHandel = async () => {
-//   const res = await userRoleMenuQuery()
-//   if (res.code === 200) {
-//     userRoleMenu.value = res.data;
-//   }
-//   event_bus.emit('user_role_menu', res.data);
-// }
+const userMenuQueryHandel = async () => {
+  const res = await userMenuQuery()
+  if (res.code === 200) {
+    userMenu.value = res.data;
+  }
+  event_bus.emit('user_menu', res.data);
+}
 
 const result = ref({total: 0, roles: []});
 
@@ -118,6 +117,7 @@ const formatDateTimeRange = (datetimeArr) => {
     });
     return formattedDates.join(', ');
   }
+  return null
 }
 const userFormRefreshHandel = async () => {
   userForm.phone = null;
@@ -129,15 +129,16 @@ const userFormRefreshHandel = async () => {
   userForm.create_datetime = null;
   userForm.update_datetime = null;
   userForm.number_pages = 1;
-  userForm.number_pieces = 250;
+  userForm.number_pieces = 100;
 }
 
 const userQueryHandel = async () => {
-  // await userRoleMenuQueryHandel()
+  await userMenuQueryHandel()
   userForm.login_datetime = formatDateTimeRange(userForm.login_datetime);
   userForm.logout_datetime = formatDateTimeRange(userForm.logout_datetime);
   userForm.create_datetime = formatDateTimeRange(userForm.create_datetime);
   userForm.update_datetime = formatDateTimeRange(userForm.update_datetime);
+  console.log(userForm)
   const res = await userQuery(userForm)
   if (res.code === 200 || res.code === 204) {
     result.value.total = res.data.total;
@@ -147,13 +148,14 @@ const userQueryHandel = async () => {
 
 userQueryHandel()
 
-const numberPagesChangeHandel = (val) => {
-  userForm.number_pages = val;
+const userPaginationHandel = () => {
+  const handler = (msg) => {
+    userForm.number_pages = msg.pages;
+    userForm.number_pieces = msg.pieces;
+  };
+  event_bus.on('user_pagination', handler);
 };
-
-const numberPiecesChangeHandel = (val) => {
-  userForm.number_pieces = val;
-};
+userPaginationHandel();
 </script>
 
 <style scoped>
@@ -169,16 +171,19 @@ const numberPiecesChangeHandel = (val) => {
   width: 355px;
 }
 
-.ant-space-compact:nth-child(5),
-.ant-space-compact:nth-child(6){
+.ant-space-compact:nth-child(5) {
   margin-top: 5px;
-  width: 215px;
+  width: 224px;
+}
+
+.ant-space-compact:nth-child(6) {
+  width: 210px;
 }
 
 .ant-space-compact:nth-child(7),
-.ant-space-compact:nth-child(8){
+.ant-space-compact:nth-child(8) {
   margin-top: 5px;
-  width: 285px;
+  width: 355px;
 }
 
 .icon_box {
@@ -197,7 +202,7 @@ const numberPiecesChangeHandel = (val) => {
 
 .ant-input-affix-wrapper {
   border-radius: 3px;
-  width: 240px;
+  width: 310px;
   padding-left: 5px;
   padding-right: 5px;
 }
@@ -212,7 +217,7 @@ const numberPiecesChangeHandel = (val) => {
 }
 
 :deep(.ant-select-single .ant-select-selector) {
-  width: 170px;
+  width: 180px;
   border-radius: 3px;
 }
 

@@ -1,12 +1,12 @@
 <template>
   <div class="route_container" v-for="(route, index) in routes">
     <RouterLink :to="route.path" @click="toggleSelected(index)">
-      <a-tooltip class="box-item" placement="right">
-        <template #title>{{ route.name }}</template>
-        <div :class="['icon_container', { selected: selectedIndex === index }]">
-          <component :is="route.icon"/>
-        </div>
-      </a-tooltip>
+      <a-popover placement="right">
+        <template #content>{{ route.name }}</template>
+        <a-button class="router_button">
+          <component :is="route.icon" class="router_icon"/>
+        </a-button>
+      </a-popover>
     </RouterLink>
   </div>
 </template>
@@ -14,7 +14,7 @@
 <script setup>
 import {ref, watch} from 'vue';
 import {useRoute} from 'vue-router';
-import {DashboardOutlined, UserOutlined, CrownOutlined, SettingOutlined} from '@ant-design/icons-vue';
+import {DashboardOutlined, UserOutlined, CrownOutlined, SettingOutlined, SearchOutlined} from '@ant-design/icons-vue';
 
 const selectedIndex = ref(-1);
 const route = useRoute();
@@ -51,12 +51,7 @@ watch(() => route.path, (newPath) => {
   justify-content: center;
 }
 
-.box-item {
-  background: white;
-  color: #2c3e50;
-}
-
-.icon_container {
+.router_button {
   width: 40px;
   height: 40px;
   margin-top: 5px;
@@ -65,20 +60,9 @@ watch(() => route.path, (newPath) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #dcdfe6;
 }
 
-.icon_container:hover {
-  background: #ededee;
-}
-
-.selected:hover {
-  background-color: #e2f0ff;
-  color: #409EFF;
-}
-
-.selected {
-  background-color: #e2f0ff;
-  color: #409EFF;
+.router_icon {
+  font-size: 18px;
 }
 </style>

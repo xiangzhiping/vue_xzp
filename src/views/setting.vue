@@ -4,7 +4,7 @@
       <div
           v-for="(tab, index) in tabs"
           :key="index"
-          class="user_container_tabs"
+          class="user_container_tab"
           @click="changeTab(index)"
       >{{ tab }}</div>
     </div>
@@ -25,10 +25,9 @@ import B from "@/components/settings/b.vue";
 import C from "@/components/settings/c.vue";
 
 const currentComponent = ref(A);
-const tabs = ['aaaa', 'bbbb', 'cccc'];
+const tabs = ['div1', 'div2', 'div3'];
 const currentIndex = ref(0);
 
-// 计算属性用于决定过渡动画的方向
 const transitionName = computed(() => {
   return currentIndex.value < previousIndex.value ? 'slide-fade-right' : 'slide-fade-left';
 });
@@ -57,22 +56,28 @@ function changeTab(index) {
   display: flex;
   flex-direction: column;
 }
+
 .user_container_tabs{
   width: 100%;
   height: 50px;
-  border: 1px solid #5900f8;
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
-.user_container_tabs{
+
+.user_container_tab{
   width: 100px;
   height: 50px;
-  background: #c2c2c4;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  cursor: pointer;
 }
+
+.user_container_tab:hover{
+  background: #cb5dd1;
+}
+
 .user_container_pane{
   width: 100%;
   height: 100%;

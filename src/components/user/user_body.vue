@@ -1,16 +1,56 @@
 <template>
-  <div class="user_role_body_box" ref="boxElement">
-    <a-table :columns="columns" :data-source="userQueryRes.users" bordered :pagination="false" :scroll="{ y: refsd }">
+  <div class="user_body" ref="boxElement">
+    <a-table :columns="columns" :data-source="result.users" :pagination="false" :scroll="{ y: tableHeight }">
+      <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'login_status'">
+          <PoweroffOutlined
+              :style="{color: record.login_status ? '#13ce66' : '#ff4d4f'}"
+          />
+        </template>
+        <template v-else-if="column.key === 'account_status'">
+          <a-switch v-model:checked="record.account_status" size="small" :loading="accountVisible[record.user_id]"
+                    @change="userAccountStatusUpdateHandle(record.account_status, record.user_id)">
+            <template #checkedChildren>
+              <CheckOutlined/>
+            </template>
+            <template #unCheckedChildren>
+              <CloseOutlined/>
+            </template>
+          </a-switch>
+        </template>
+      </template>
       <template #footer>
-        <a-pagination size="small" :total="userQueryRes.total" show-size-changer show-quick-jumper/>
+        <a-pagination size="small" :total="result.total" show-size-changer show-quick-jumper
+                      v-model:current="userPagination.pages"
+                      v-model:page-size="userPagination.pieces"
+                      :show-total="total => `共 ${total} 条`"/>
       </template>
     </a-table>
   </div>
 </template>
 
 <script setup>
-import {onMounted, onUnmounted, ref, watchEffect} from 'vue';
+import {onMounted, onUnmounted, reactive, ref, watch} from 'vue';
 import eventBus from '@/utils/event_bus.js';
+import {userAccountStatusUpdate} from '@/apis/user.js';
+import {PoweroffOutlined, CheckOutlined, CloseOutlined} from '@ant-design/icons-vue';
+
+const windowHeight = ref(window.innerHeight);
+const tableHeight = ref(windowHeight.value - 200);
+
+const windowHeightResizeHandle = () => {
+  windowHeight.value = window.innerHeight;
+  tableHeight.value = windowHeight.value - 200;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', windowHeightResizeHandle);
+  windowHeightResizeHandle();
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', windowHeightResizeHandle);
+});
 
 const columns = [
   {title: '用户ID', dataIndex: 'user_id', key: 'user_id', width: 110},
@@ -27,44 +67,37 @@ const columns = [
   {title: '更新日期时间', dataIndex: 'update_datetime', key: 'update_datetime', width: 100}
 ];
 
-const userQueryRes = ref({total: 0, users: []});
+const result = ref({total: 0, users: []});
+const accountVisible = reactive({});
 
 const userQueryResHandle = () => {
   const handler = (msg) => {
-    userQueryRes.value = msg.data;
+    result.value = msg.data;
   };
   eventBus.on('users', handler);
 };
 userQueryResHandle();
 
-// 初始化窗口高度
-const windowHeight = ref(window.innerHeight);
-
-// 计算table滚动区域的高度
-const refsd = ref(windowHeight.value - 210); // 初始值
-
-// 监听窗口高度变化
-const handleResize = () => {
-  windowHeight.value = window.innerHeight;
-  refsd.value = windowHeight.value - 210; // 更新table滚动区域的高度
-  console.log(`${windowHeight.value}px, ${refsd.value}`);
+const userAccountStatusUpdateHandle = async (value, userId) => {
+  accountVisible[userId] = true;
+  try {
+    const res = await userAccountStatusUpdate({user_id: userId, state: value});
+    if (res.code === 200) {
+      accountVisible[userId] = false;
+    }
+  } catch (error) {
+    accountVisible[userId] = false;
+  }
 };
 
-// 在组件挂载后开始监听
-onMounted(() => {
-  window.addEventListener('resize', handleResize);
-  // 立即执行一次，确保初始值正确
-  handleResize();
-});
-
-// 组件卸载前停止监听
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
-});
+const userPagination = reactive({pages: 1, pieces: 100});
+watch(userPagination, (newVal, oldVal) => {
+  eventBus.emit('user_pagination', newVal)
+}, {deep: true});
 </script>
 
 <style scoped>
-.user_role_body_box {
+.user_body {
   width: 100%;
   margin-top: 5px;
   display: flex;
@@ -72,13 +105,7 @@ onUnmounted(() => {
 }
 
 :deep(.ant-table-header) {
-  line-height: 30px;
-  text-align: center;
-  border-radius: 0;
-}
-
-:deep(.ant-table-thead) {
-  height: 30px;
+  line-height: 20px;
   text-align: center;
   border-radius: 0;
 }
@@ -90,7 +117,7 @@ onUnmounted(() => {
 
 :deep(.ant-table-thead > tr > th) {
   text-align: center;
-  color: #909399;
+  color: #606266;
   font-family: "微软雅黑 Light", sans-serif;
 }
 
